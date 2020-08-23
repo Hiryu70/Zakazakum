@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Zakazakum.Domain.Entities;
 
 namespace Zakazakum.Application.Common.Interfaces
@@ -12,5 +14,7 @@ namespace Zakazakum.Application.Common.Interfaces
 		DbSet<User> Users { get; set; }
 
 		DbSet<UserOrder> UserOrders { get; set; }
+
+		Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 	}
 }

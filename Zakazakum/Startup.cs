@@ -46,6 +46,8 @@ namespace Zakazakum.API
 			services.AddEf(Configuration);
 			services.AddApplication();
 
+			services.AddRouting(options => options.LowercaseUrls = true);
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo

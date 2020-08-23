@@ -21,15 +21,10 @@
     <Folder Include="Orders\Commands\" />
     <Folder Include="Orders\Queries\" />
     <Folder Include="Orders\Commands\CreateOrder\" />
-    <Folder Include="Restraunts\Commands\CreateRestaurant\" />
-    <Folder Include="Users\Commands\CreateUser\" />
     <Folder Include="Orders\Commands\AddFoodOrder\" />
     <Folder Include="Orders\Commands\UpdateDeliveryCost\" />
-    <Folder Include="Users\Queries\GetUsers\" />
     <Folder Include="Orders\Queries\GetOrderGroupedByFood\" />
     <Folder Include="Orders\Queries\GetOrderGroupedByUser\" />
-    <Folder Include="Users\Commands\" />
-    <Folder Include="Users\Queries\" />
   </ItemGroup>
 
 </Project>

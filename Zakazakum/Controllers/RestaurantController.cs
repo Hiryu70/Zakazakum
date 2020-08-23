@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
@@ -27,13 +28,13 @@ namespace Zakazakum.API.Controllers
 		/// <summary>
 		/// Get all foods in restaurant
 		/// </summary>
-		/// <param name="query">Restaurant ID</param>
+		/// <param name="restaurantId">Restaurant ID</param>
 		/// <returns></returns>
-		[HttpGet]
+		[HttpGet("{restaurantId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<FoodsListVm>> GetFoods([FromQuery]GetFoodsListQuery query)
+		public async Task<ActionResult<FoodsListVm>> GetFoods(Guid restaurantId)
 		{
-			var vm = await Mediator.Send(query);
+			var vm = await Mediator.Send(new GetFoodsListQuery { RestaurantId = restaurantId });
 
 			return Ok(vm);
 		}

@@ -8,7 +8,7 @@ namespace Zakazakum.API.Controllers
 	/// Base controller
 	/// </summary>
 	[ApiController]
-	[Route("api/[controller]/[action]")]
+	[Route("api/[controller]")]
 	public class BaseController : ControllerBase
 	{
 		private IMediator _mediator;

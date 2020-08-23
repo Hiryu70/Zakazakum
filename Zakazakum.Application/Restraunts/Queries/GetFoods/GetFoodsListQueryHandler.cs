@@ -25,11 +25,12 @@ namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 			var restaurants = await _context.Restaurants
 				.Include(r => r.Foods)
 				.ToListAsync(cancellationToken);
-			var restaurant = restaurants.FirstOrDefault(r => r.Id == request.RestaurantId);
+			var restaurant = restaurants.First(r => r.Id == request.RestaurantId);
 			var foods = _mapper.Map<List<FoodVm>>(restaurant?.Foods);
 
 			var vm = new FoodsListVm
 			{
+				Title = restaurant?.Title,
 				Foods = foods
 			};
 
