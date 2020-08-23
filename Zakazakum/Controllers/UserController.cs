@@ -30,6 +30,7 @@ namespace Zakazakum.API.Controllers
 		/// <param name="command">New user details</param>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> Create([FromBody]CreateUserCommand command)
 		{
 			await Mediator.Send(command);

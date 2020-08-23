@@ -32,6 +32,7 @@ namespace Zakazakum.API.Controllers
 		/// <returns></returns>
 		[HttpGet("{restaurantId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<FoodsListVm>> GetFoods(Guid restaurantId)
 		{
 			var vm = await Mediator.Send(new GetFoodsListQuery { RestaurantId = restaurantId });

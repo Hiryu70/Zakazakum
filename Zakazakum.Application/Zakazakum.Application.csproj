@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Orders\Queries\" />
     <Folder Include="Orders\Commands\AddFoodOrder\" />
-    <Folder Include="Orders\Commands\UpdateDeliveryCost\" />
     <Folder Include="Orders\Queries\GetOrderGroupedByFood\" />
     <Folder Include="Orders\Queries\GetOrderGroupedByUser\" />
   </ItemGroup>

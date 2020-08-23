@@ -22,7 +22,7 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 		private async Task<bool> RestaurantExists(CreateOrderCommand command, Guid restaurantId, CancellationToken cancellationToken)
 		{
 			var restaurants = await _context.Restaurants.ToListAsync(cancellationToken);
-			var restaurant = restaurants.First(r => r.Id == restaurantId);
+			var restaurant = restaurants.FirstOrDefault(r => r.Id == restaurantId);
 
 			if (restaurant != null)
 			{

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
+using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
 
 namespace Zakazakum.API.Controllers
 {
@@ -21,6 +22,26 @@ namespace Zakazakum.API.Controllers
 			var id = await Mediator.Send(command);
 
 			return Ok(id);
+		}
+
+		/// <summary>
+		/// Update delivery cost
+		/// </summary>
+		/// <param name="deliveryCost">New delivery cost</param>
+		/// <param name="orderId">Order ID</param>
+		[HttpPost("{orderId}/update-delivery-cost")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> UpdateDeliveryCost([FromBody]DeliveryCostVm deliveryCost, [FromRoute] int orderId)
+		{
+			var command = new UpdateDeliveryCostCommand
+			{
+				DeliveryCost = deliveryCost.DeliveryCost,
+				OrderId = orderId
+			};
+			await Mediator.Send(command);
+
+			return NoContent();
 		}
 	}
 }
