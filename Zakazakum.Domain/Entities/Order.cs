@@ -5,7 +5,9 @@ namespace Zakazakum.Domain.Entities
 {
 	public class Order
 	{
-		public Guid Id { get; set; }
+		public int Id { get; set; }
+
+		public DateTime Created { get; set; }
 
 		public Restaurant Restaurant { get; set; }
 

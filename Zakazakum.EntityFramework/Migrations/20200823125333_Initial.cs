@@ -3,13 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Zakazakum.EntityFramework.Migrations
 {
-    public partial class Restaurants : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Meals");
-
             migrationBuilder.CreateTable(
                 name: "Restaurants",
                 columns: table => new
@@ -60,7 +57,9 @@ namespace Zakazakum.EntityFramework.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Created = table.Column<DateTime>(nullable: false),
                     RestaurantId = table.Column<Guid>(nullable: true),
                     DeliveryCost = table.Column<float>(nullable: false)
                 },
@@ -82,7 +81,7 @@ namespace Zakazakum.EntityFramework.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: true),
                     IsOrderPaid = table.Column<bool>(nullable: false),
-                    OrderId = table.Column<Guid>(nullable: true)
+                    OrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -178,20 +177,6 @@ namespace Zakazakum.EntityFramework.Migrations
 
             migrationBuilder.DropTable(
                 name: "Restaurants");
-
-            migrationBuilder.CreateTable(
-                name: "Meals",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Cost = table.Column<float>(type: "REAL", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Meals", x => x.Id);
-                });
         }
     }
 }

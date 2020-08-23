@@ -18,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Orders\Commands\" />
     <Folder Include="Orders\Queries\" />
-    <Folder Include="Orders\Commands\CreateOrder\" />
     <Folder Include="Orders\Commands\AddFoodOrder\" />
     <Folder Include="Orders\Commands\UpdateDeliveryCost\" />
     <Folder Include="Orders\Queries\GetOrderGroupedByFood\" />

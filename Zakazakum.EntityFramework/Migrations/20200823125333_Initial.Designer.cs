@@ -9,8 +9,8 @@ using Zakazakum.EntityFramework;
 namespace Zakazakum.EntityFramework.Migrations
 {
     [DbContext(typeof(ZakazakumContext))]
-    [Migration("20200823090255_Restaurants")]
-    partial class Restaurants
+    [Migration("20200823125333_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,8 +72,11 @@ namespace Zakazakum.EntityFramework.Migrations
 
             modelBuilder.Entity("Zakazakum.Domain.Entities.Order", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
                     b.Property<float>("DeliveryCost")
@@ -129,8 +132,8 @@ namespace Zakazakum.EntityFramework.Migrations
                     b.Property<bool>("IsOrderPaid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("TEXT");

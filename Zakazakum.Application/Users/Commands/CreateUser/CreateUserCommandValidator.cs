@@ -22,9 +22,9 @@ namespace Zakazakum.Application.Users.Commands.CreateUser
 				.When(x => !string.IsNullOrEmpty(x.PhoneNumber));
 		}
 
-		private async Task<bool> UniquePhoneNumber(CreateUserCommand command, string nickname, CancellationToken cancellationToken)
+		private async Task<bool> UniquePhoneNumber(CreateUserCommand command, string phoneNumber, CancellationToken cancellationToken)
 		{
-			var user = await _context.Users.FirstOrDefaultAsync(s => s.PhoneNumber == command.PhoneNumber, cancellationToken);
+			var user = await _context.Users.FirstOrDefaultAsync(s => s.PhoneNumber == phoneNumber, cancellationToken);
 			if (user == null)
 			{
 				return true;
