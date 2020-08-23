@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Zakazakum.Domain.Entities
 {
-	public class Meal
+	public class Restaurant
 	{
 		public Guid Id { get; set; }
 
 		public string Title { get; set; }
 
-		public float Cost { get; set; }
-
-		public string Description { get; set; }
+		public List<Food> Foods { get; set; }
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
-using Zakazakum.Domain;
 using Zakazakum.Domain.Entities;
 
 namespace Zakazakum.EntityFramework
@@ -11,6 +10,12 @@ namespace Zakazakum.EntityFramework
 		{
 		}
 
-		public DbSet<Meal> Meals { get; set; }
+		public DbSet<Restaurant> Restaurants { get; set; }
+
+		public DbSet<Order> Orders { get; set; }
+
+		public DbSet<User> Users { get; set; }
+
+		public DbSet<UserOrder> UserOrders { get; set; }
 	}
 }
