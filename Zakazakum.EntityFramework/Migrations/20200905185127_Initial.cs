@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Zakazakum.EntityFramework.Migrations
@@ -58,7 +59,7 @@ namespace Zakazakum.EntityFramework.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     OwnerId = table.Column<Guid>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
                     RestaurantId = table.Column<Guid>(nullable: true),

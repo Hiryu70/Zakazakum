@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
 using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
+using Zakazakum.Application.Orders.Queries.GetOrder;
+using Zakazakum.Application.Orders.Queries.GetOrders;
 
 namespace Zakazakum.API.Controllers
 {
@@ -13,6 +15,32 @@ namespace Zakazakum.API.Controllers
 	/// </summary>
 	public class OrderController : BaseController
 	{
+		/// <summary>
+		/// Get all orders
+		/// </summary>
+		/// <returns>List of orders</returns>
+		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetAll()
+		{
+			var vm = await Mediator.Send(new GetOrdersListQuery());
+
+			return Ok(vm);
+		}
+
+		/// <summary>
+		/// Get order by Id
+		/// </summary>
+		/// <returns>Get order data</returns>
+		[HttpGet("{orderId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetById([FromRoute]int orderId)
+		{
+			var vm = await Mediator.Send(new GetOrderQuery() { OrderId = orderId });
+
+			return Ok(vm);
+		}
+
 		/// <summary>
 		/// Create new order
 		/// </summary>

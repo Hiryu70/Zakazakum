@@ -43,7 +43,7 @@ namespace Zakazakum.API
 		/// <param name="services">Collection of service descriptors</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddEf(Configuration);
+			services.AddMySql(Configuration);
 			services.AddApplication();
 
 			services.AddRouting(options => options.LowercaseUrls = true);
@@ -69,8 +69,6 @@ namespace Zakazakum.API
 			})
 				.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null)
 				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IZakazakumContext>());
-				services.AddDbContext<ZakazakumContext>(options =>
-				options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
 		}
 
 		/// <summary>

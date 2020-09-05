@@ -18,7 +18,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 
 		public void Mapping(Profile profile)
 		{
-			profile.CreateMap<Order, GetOrder.OrderVm>()
+			profile.CreateMap<Order, OrderVm>()
 				.ForMember(vm => vm.OwnerName, opt => opt.MapFrom(m => m.Owner.Name))
 				.ForMember(vm => vm.RestaurantTitle, opt => opt.MapFrom(m => m.Restaurant.Title));
 		}

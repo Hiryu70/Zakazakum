@@ -15,7 +15,7 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 			_context = context;
 		}
 
-		public async Task<Unit> Handle(AddFoodOrderCommand request, CancellationToken cancellationToken)
+		public Task<Unit> Handle(AddFoodOrderCommand request, CancellationToken cancellationToken)
 		{
 			throw new NotImplementedException();
 		}
