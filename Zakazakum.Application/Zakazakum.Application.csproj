@@ -17,10 +17,4 @@
     <ProjectReference Include="..\Zakazakum.Domain\Zakazakum.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Orders\Queries\" />
-    <Folder Include="Orders\Queries\GetOrderGroupedByFood\" />
-    <Folder Include="Orders\Queries\GetOrderGroupedByUser\" />
-  </ItemGroup>
-
 </Project>

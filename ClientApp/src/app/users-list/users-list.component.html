@@ -1,0 +1,20 @@
+<h3>Тела</h3>
+<div class="d-flex align-items-end flex-column">
+    <div><button class="btn btn-link" (click)="newUser()">Добавить тело</button></div>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{user.name}}</td>
+                <td>{{user.phoneNumber}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

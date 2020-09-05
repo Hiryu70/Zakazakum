@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h4 class="modal-title">Тело</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <input type="hidden" class="Id" [value]="user.Id">
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Имя</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="name" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }" placeholder="Имя" maxlength="40">
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Введи имя епта</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Телефон</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="phoneNumber" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" placeholder="79998887766" maxlength="11">
+                <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
+                    <div *ngIf="f.phoneNumber.errors.required">Введи телефон епта</div>
+                    <div *ngIf="f.phoneNumber.errors.minLength">Больше цифер введи</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <button class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+        </div>
+    </form>
+</div>

@@ -1,34 +1,38 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from '@angular/common/http';
+
+import { Service, API_BASE_URL } from './api/api.client.generated';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
+import { UserComponent } from './user/user.component';
+import { UsersListComponent } from './users-list/users-list.component';
+import { OrdersListComponent } from './orders-list/orders-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    RestaurantsListComponent,
+    UserComponent,
+    UsersListComponent,
+    OrdersListComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
+    BrowserModule,
     FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-    ])
+    ReactiveFormsModule,
+    HttpClientModule,
+    ModalModule.forRoot()
   ],
-  providers: [],
+  entryComponents: [ 
+    UserComponent
+  ],
+  providers: [
+    { provide: API_BASE_URL, useValue: "http://localhost:5000" },
+    Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
