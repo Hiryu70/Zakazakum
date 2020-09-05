@@ -15,7 +15,7 @@ namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
 		{
 			_context = context;
 			RuleFor(x => x.OrderId).MustAsync(OrderExists)
-				.WithMessage("Не найден ресторан с указанным идентификатором");
+				.WithMessage("Не найден заказ с указанным идентификатором");
 			RuleFor(x => x.DeliveryCost).GreaterThanOrEqualTo(0);
 		}
 

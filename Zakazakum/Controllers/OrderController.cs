@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Zakazakum.Application.Orders.Commands.AddFoodOrder;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
 using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
 
@@ -37,6 +39,26 @@ namespace Zakazakum.API.Controllers
 			var command = new UpdateDeliveryCostCommand
 			{
 				DeliveryCost = deliveryCost.DeliveryCost,
+				OrderId = orderId
+			};
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Add food order
+		/// </summary>
+		/// <param name="foodOrders">Food orders</param>
+		/// <param name="orderId">Order ID</param>
+		[HttpPost("{orderId}/add-food-order")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> AddFoodOrder([FromBody]List<FoodOrderVm> foodOrders, [FromRoute] int orderId)
+		{
+			var command = new AddFoodOrderCommand
+			{
+				FoordOrders = foodOrders,
 				OrderId = orderId
 			};
 			await Mediator.Send(command);

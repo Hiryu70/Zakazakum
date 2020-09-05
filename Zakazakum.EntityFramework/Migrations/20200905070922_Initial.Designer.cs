@@ -9,7 +9,7 @@ using Zakazakum.EntityFramework;
 namespace Zakazakum.EntityFramework.Migrations
 {
     [DbContext(typeof(ZakazakumContext))]
-    [Migration("20200823125333_Initial")]
+    [Migration("20200905070922_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,10 +82,15 @@ namespace Zakazakum.EntityFramework.Migrations
                     b.Property<float>("DeliveryCost")
                         .HasColumnType("REAL");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid?>("RestaurantId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("RestaurantId");
 
@@ -167,6 +172,10 @@ namespace Zakazakum.EntityFramework.Migrations
 
             modelBuilder.Entity("Zakazakum.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("Zakazakum.Domain.Entities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
                     b.HasOne("Zakazakum.Domain.Entities.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId");

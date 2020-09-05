@@ -23,9 +23,13 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 			var restaurants = await _context.Restaurants.ToListAsync(cancellationToken);
 			var restaurant = restaurants.First(r => r.Id == request.RestaurantId);
 
+			var users = await _context.Users.ToListAsync(cancellationToken);
+			var user = users.First(u => u.Id == request.OwnerId);
+
 			var entity = new Order
 			{
 				Restaurant = restaurant,
+				Owner = user,
 				Created = DateTime.Now
 			};
 

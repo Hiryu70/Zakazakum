@@ -80,10 +80,15 @@ namespace Zakazakum.EntityFramework.Migrations
                     b.Property<float>("DeliveryCost")
                         .HasColumnType("REAL");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid?>("RestaurantId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("RestaurantId");
 
@@ -165,6 +170,10 @@ namespace Zakazakum.EntityFramework.Migrations
 
             modelBuilder.Entity("Zakazakum.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("Zakazakum.Domain.Entities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
                     b.HasOne("Zakazakum.Domain.Entities.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId");

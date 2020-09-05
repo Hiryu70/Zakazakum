@@ -59,6 +59,7 @@ namespace Zakazakum.EntityFramework.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    OwnerId = table.Column<Guid>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
                     RestaurantId = table.Column<Guid>(nullable: true),
                     DeliveryCost = table.Column<float>(nullable: false)
@@ -66,6 +67,12 @@ namespace Zakazakum.EntityFramework.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
@@ -141,6 +148,11 @@ namespace Zakazakum.EntityFramework.Migrations
                 name: "IX_FoodOrder_UserOrderId",
                 table: "FoodOrder",
                 column: "UserOrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_OwnerId",
+                table: "Orders",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_RestaurantId",

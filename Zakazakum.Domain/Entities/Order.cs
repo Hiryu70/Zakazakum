@@ -7,6 +7,8 @@ namespace Zakazakum.Domain.Entities
 	{
 		public int Id { get; set; }
 
+		public User Owner { get; set; }
+
 		public DateTime Created { get; set; }
 
 		public Restaurant Restaurant { get; set; }
