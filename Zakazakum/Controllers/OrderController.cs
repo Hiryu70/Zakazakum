@@ -16,9 +16,9 @@ namespace Zakazakum.API.Controllers
 	public class OrderController : BaseController
 	{
 		/// <summary>
-		/// Get all orders
+		/// Получить все заказы
 		/// </summary>
-		/// <returns>List of orders</returns>
+		/// <returns>Список заказов</returns>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAll()
@@ -29,9 +29,9 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Get order by Id
+		/// Получить заказ по идентификатору
 		/// </summary>
-		/// <returns>Get order data</returns>
+		/// <returns>Данные по заказу</returns>
 		[HttpGet("{orderId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetById([FromRoute]int orderId)
@@ -42,9 +42,9 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Create new order
+		/// Создать новый заказ
 		/// </summary>
-		/// <param name="command">New order ID</param>
+		/// <param name="command">Идентификатор нового заказа</param>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<CreateOrderVm>> Create([FromBody]CreateOrderCommand command)
@@ -55,10 +55,10 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Update delivery cost
+		/// Обновить стоимость доставки
 		/// </summary>
-		/// <param name="deliveryCost">New delivery cost</param>
-		/// <param name="orderId">Order ID</param>
+		/// <param name="deliveryCost">Стоимость доставки</param>
+		/// <param name="orderId">Идентификатор заказа</param>
 		[HttpPost("{orderId}/update-delivery-cost")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,10 +75,10 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Add food order
+		/// Добавить еду в заказ
 		/// </summary>
-		/// <param name="foodOrders">Food orders</param>
-		/// <param name="orderId">Order ID</param>
+		/// <param name="foodOrders">Заказ еды</param>
+		/// <param name="orderId">Идентификатор заказа</param>
 		[HttpPost("{orderId}/add-food-order")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]

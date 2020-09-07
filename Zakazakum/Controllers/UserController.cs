@@ -12,9 +12,9 @@ namespace Zakazakum.API.Controllers
 	public class UserController : BaseController
 	{
 		/// <summary>
-		/// Get all users
+		/// Получить всех пользователей
 		/// </summary>
-		/// <returns>List of users</returns>
+		/// <returns>Список пользователей</returns>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<UsersListVm>> GetAll()
@@ -25,9 +25,9 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Create new user
+		/// Создать нового пользователя
 		/// </summary>
-		/// <param name="command">New user details</param>
+		/// <param name="command">Параметры нового пользователя</param>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]

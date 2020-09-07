@@ -43,7 +43,7 @@ namespace Zakazakum.API
 		/// <param name="services">Collection of service descriptors</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMySql(Configuration);
+			services.AddPostgresql(Configuration);
 			services.AddApplication();
 
 			services.AddRouting(options => options.LowercaseUrls = true);
@@ -107,4 +107,5 @@ namespace Zakazakum.API
 			});
 		}
 	}
+
 }

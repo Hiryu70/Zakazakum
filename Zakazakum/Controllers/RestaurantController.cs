@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Zakazakum.Application.Restraunts.Commands.CreateRestaurant;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
 using Zakazakum.Application.Restraunts.Queries.GetRestaurants;
 
@@ -13,9 +14,9 @@ namespace Zakazakum.API.Controllers
 	public class RestaurantController : BaseController
 	{
 		/// <summary>
-		/// Get all restaurants
+		/// Получить все рестораны
 		/// </summary>
-		/// <returns>List of restaurants</returns>
+		/// <returns>Список ресторанов</returns>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<RestaurantsListVm>> GetAll()
@@ -26,10 +27,23 @@ namespace Zakazakum.API.Controllers
 		}
 
 		/// <summary>
-		/// Get all foods in restaurant
+		/// Создать новый ресторан
 		/// </summary>
-		/// <param name="restaurantId">Restaurant ID</param>
-		/// <returns></returns>
+		/// <returns>Идентификатор нового ресторана</returns>
+		[HttpPost]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<RestaurantsListVm>> Create([FromBody] CreateRestaurantCommand command)
+		{
+			var vm = await Mediator.Send(command);
+
+			return Ok(vm);
+		}
+
+		/// <summary>
+		/// Получить всю еду в ресторане
+		/// </summary>
+		/// <param name="restaurantId">Идентификатор ресторана</param>
+		/// <returns>Список доступной еды в ресторане</returns>
 		[HttpGet("{restaurantId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]

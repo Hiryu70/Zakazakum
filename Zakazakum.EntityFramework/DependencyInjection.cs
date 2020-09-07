@@ -26,5 +26,17 @@ namespace Zakazakum.EntityFramework
 
 			return services;
 		}
+
+		public static IServiceCollection AddPostgresql(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddDbContext<ZakazakumContext>(options =>
+				options.UseNpgsql(configuration.GetConnectionString("NpgsqlConnection")));
+
+			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
+
+			return services;
+		}
+
+
 	}
 }

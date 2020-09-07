@@ -10,6 +10,7 @@ namespace Zakazakum.EntityFramework
 		{
 		}
 
+
 		public DbSet<Restaurant> Restaurants { get; set; }
 
 		public DbSet<Order> Orders { get; set; }
