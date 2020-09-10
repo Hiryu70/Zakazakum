@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -21,11 +20,10 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public async Task<OrderVm> Handle(GetOrderQuery request, CancellationToken cancellationToken)
 		{
-			var orders = await _context.Orders
+			var order = await _context.Orders
 				.Include(o => o.Restaurant)
 				.Include(o => o.Owner)
-				.ToListAsync(cancellationToken);
-			var order = orders.FirstOrDefault(o => o.Id == request.OrderId);
+				.FirstOrDefaultAsync(o => o.Id == request.OrderId);
 
 			var vm = _mapper.Map<OrderVm>(order);
 

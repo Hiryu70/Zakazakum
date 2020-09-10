@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +20,7 @@ namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
 
 		private async Task<bool> OrderExists(UpdateDeliveryCostCommand command, int orderId, CancellationToken cancellationToken)
 		{
-			var orders = await _context.Orders.ToListAsync(cancellationToken);
-			var order = orders.FirstOrDefault(r => r.Id == orderId);
+			var order = await _context.Orders.FirstOrDefaultAsync(r => r.Id == orderId);
 
 			if (order != null)
 			{

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -17,12 +16,25 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 			_context = context;
 			RuleFor(x => x.RestaurantId).MustAsync(RestaurantExists)
 				.WithMessage("Не найден ресторан с указанным идентификатором");
+			RuleFor(x => x.OwnerId).MustAsync(UserExists)
+				.WithMessage("Не найден пользователь с указанным идентификатором");
 		}
 
 		private async Task<bool> RestaurantExists(CreateOrderCommand command, Guid restaurantId, CancellationToken cancellationToken)
 		{
-			var restaurants = await _context.Restaurants.ToListAsync(cancellationToken);
-			var restaurant = restaurants.FirstOrDefault(r => r.Id == restaurantId);
+			var restaurant = await _context.Restaurants.FirstOrDefaultAsync(r => r.Id == restaurantId);
+
+			if (restaurant != null)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private async Task<bool> UserExists(CreateOrderCommand command, Guid userId, CancellationToken cancellationToken)
+		{
+			var restaurant = await _context.Users.FirstOrDefaultAsync(r => r.Id == userId);
 
 			if (restaurant != null)
 			{

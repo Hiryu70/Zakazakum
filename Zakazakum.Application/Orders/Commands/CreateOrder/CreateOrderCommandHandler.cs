@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -20,11 +19,8 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 
 		public async Task<CreateOrderVm> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
 		{
-			var restaurants = await _context.Restaurants.ToListAsync(cancellationToken);
-			var restaurant = restaurants.First(r => r.Id == request.RestaurantId);
-
-			var users = await _context.Users.ToListAsync(cancellationToken);
-			var user = users.First(u => u.Id == request.OwnerId);
+			var restaurant = await _context.Restaurants.FirstAsync(r => r.Id == request.RestaurantId);
+			var user = await _context.Users.FirstAsync(u => u.Id == request.OwnerId);
 
 			var entity = new Order
 			{

@@ -7,16 +7,6 @@ namespace Zakazakum.EntityFramework
 {
 	public static class DependencyInjection
 	{
-		public static IServiceCollection AddSqlite(this IServiceCollection services, IConfiguration configuration)
-		{
-			services.AddDbContext<ZakazakumContext>(options =>
-				options.UseSqlite(configuration.GetConnectionString("SqliteConnection")));
-
-			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
-
-			return services;
-		}
-
 		public static IServiceCollection AddMySql(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<ZakazakumContext>(options =>

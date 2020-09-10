@@ -17,7 +17,7 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 			_context = context;
 			RuleFor(x => x.OrderId).MustAsync(OrderExists)
 				.WithMessage("Не найден заказ с указанным идентификатором");
-			RuleFor(x => x.FoordOrders).MustAsync(FoodsExist)
+			RuleFor(x => x.FoodOrders).MustAsync(FoodsExist)
 				.WithMessage("Не найдено блюдо с указанным идентификатором");
 		}
 

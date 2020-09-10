@@ -7,6 +7,6 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 	{
 		public int OrderId { get; set; }
 		
-		public List<FoodOrderVm> FoordOrders { get; set; }
+		public List<FoodOrderVm> FoodOrders { get; set; }
 	}
 }

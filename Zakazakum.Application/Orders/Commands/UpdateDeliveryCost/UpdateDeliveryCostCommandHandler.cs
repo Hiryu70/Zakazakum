@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +17,7 @@ namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
 
 		public async Task<Unit> Handle(UpdateDeliveryCostCommand request, CancellationToken cancellationToken)
 		{
-			var orders = await _context.Orders.ToListAsync(cancellationToken);
-			var order = orders.First(r => r.Id == request.OrderId);
+			var order = await _context.Orders.FirstAsync(r => r.Id == request.OrderId);
 
 			order.DeliveryCost = request.DeliveryCost;
 

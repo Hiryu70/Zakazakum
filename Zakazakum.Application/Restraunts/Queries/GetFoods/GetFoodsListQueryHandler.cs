@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
+using Zakazakum.Application.Restraunts.Common;
 
 namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 {
@@ -22,10 +22,9 @@ namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 
 		public async Task<FoodsListVm> Handle(GetFoodsListQuery request, CancellationToken cancellationToken)
 		{
-			var restaurants = await _context.Restaurants
+			var restaurant = await _context.Restaurants
 				.Include(r => r.Foods)
-				.ToListAsync(cancellationToken);
-			var restaurant = restaurants.First(r => r.Id == request.RestaurantId);
+				.FirstAsync(r => r.Id == request.RestaurantId);
 			var foods = _mapper.Map<List<FoodVm>>(restaurant?.Foods);
 
 			var vm = new FoodsListVm

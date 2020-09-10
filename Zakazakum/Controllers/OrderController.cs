@@ -86,7 +86,7 @@ namespace Zakazakum.API.Controllers
 		{
 			var command = new AddFoodOrderCommand
 			{
-				FoordOrders = foodOrders,
+				FoodOrders = foodOrders,
 				OrderId = orderId
 			};
 			await Mediator.Send(command);

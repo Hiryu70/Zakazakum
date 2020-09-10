@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Zakazakum.Application.Restraunts.Common;
 
 namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 {

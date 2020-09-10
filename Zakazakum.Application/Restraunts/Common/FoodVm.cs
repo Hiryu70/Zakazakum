@@ -3,7 +3,7 @@ using AutoMapper;
 using Zakazakum.Application.Common.Mapping;
 using Zakazakum.Domain.Entities;
 
-namespace Zakazakum.Application.Restraunts.Queries.GetFoods
+namespace Zakazakum.Application.Restraunts.Common
 {
 	public class FoodVm : IMapFrom<Food>
 	{
@@ -18,6 +18,7 @@ namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 		public void Mapping(Profile profile)
 		{
 			profile.CreateMap<Food, FoodVm>();
+			profile.CreateMap<FoodVm, Food>();
 		}
 	}
 }
