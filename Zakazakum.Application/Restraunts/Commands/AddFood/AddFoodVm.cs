@@ -3,9 +3,9 @@ using AutoMapper;
 using Zakazakum.Application.Common.Mapping;
 using Zakazakum.Domain.Entities;
 
-namespace Zakazakum.Application.Restraunts.Common
+namespace Zakazakum.Application.Restraunts.Commands.AddFood
 {
-	public class FoodVm : IMapFrom<Food>
+	public class AddFoodVm : IMapFrom<Food>
 	{
 		public Guid Id { get; set; }
 
@@ -17,8 +17,7 @@ namespace Zakazakum.Application.Restraunts.Common
 
 		public void Mapping(Profile profile)
 		{
-			profile.CreateMap<Food, FoodVm>();
-			profile.CreateMap<FoodVm, Food>();
+			profile.CreateMap<AddFoodVm, Food>();
 		}
 	}
 }

@@ -5,7 +5,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
-using Zakazakum.Application.Restraunts.Common;
 
 namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 {
@@ -25,7 +24,7 @@ namespace Zakazakum.Application.Restraunts.Queries.GetFoods
 			var restaurant = await _context.Restaurants
 				.Include(r => r.Foods)
 				.FirstAsync(r => r.Id == request.RestaurantId);
-			var foods = _mapper.Map<List<FoodVm>>(restaurant?.Foods);
+			var foods = _mapper.Map<List<GetFoodVm>>(restaurant?.Foods);
 
 			var vm = new FoodsListVm
 			{

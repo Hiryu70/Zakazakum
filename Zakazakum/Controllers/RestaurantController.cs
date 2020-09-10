@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
+using Zakazakum.Application.Restraunts.Commands.AddFood;
 using Zakazakum.Application.Restraunts.Commands.CreateRestaurant;
-using Zakazakum.Application.Restraunts.Common;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
 using Zakazakum.Application.Restraunts.Queries.GetRestaurants;
 
@@ -62,7 +62,7 @@ namespace Zakazakum.API.Controllers
 		/// <param name="restaurantId">Идентификатор ресторана</param>
 		[HttpPost("{restaurantId}/food")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<IActionResult> Create([FromRoute]Guid restaurantId, [FromBody] FoodVm food)
+		public async Task<IActionResult> Create([FromRoute]Guid restaurantId, [FromBody] AddFoodVm food)
 		{
 			await Mediator.Send(new AddFoodCommand { Food = food, RestaurantId = restaurantId });
 

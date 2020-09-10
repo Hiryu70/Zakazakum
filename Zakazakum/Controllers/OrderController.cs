@@ -77,16 +77,16 @@ namespace Zakazakum.API.Controllers
 		/// <summary>
 		/// Добавить еду в заказ
 		/// </summary>
-		/// <param name="foodOrders">Заказ еды</param>
+		/// <param name="foodOrder">Заказ еды</param>
 		/// <param name="orderId">Идентификатор заказа</param>
 		[HttpPost("{orderId}/add-food-order")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<IActionResult> AddFoodOrder([FromBody]List<FoodOrderVm> foodOrders, [FromRoute] int orderId)
+		public async Task<IActionResult> AddFoodOrder([FromBody]FoodOrderVm foodOrder, [FromRoute] int orderId)
 		{
 			var command = new AddFoodOrderCommand
 			{
-				FoodOrders = foodOrders,
+				FoodOrder = foodOrder,
 				OrderId = orderId
 			};
 			await Mediator.Send(command);

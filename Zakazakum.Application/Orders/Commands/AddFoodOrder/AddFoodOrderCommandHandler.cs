@@ -1,8 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
+using Zakazakum.Domain.Entities;
 
 namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
@@ -15,9 +18,42 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 			_context = context;
 		}
 
-		public Task<Unit> Handle(AddFoodOrderCommand request, CancellationToken cancellationToken)
+		public async Task<Unit> Handle(AddFoodOrderCommand request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var order = await _context.Orders.FirstAsync(o => o.Id == request.OrderId);
+			var user = await _context.Users.FirstAsync(u => u.Id == request.FoodOrder.UserId);
+
+			var food = order.Restaurant.Foods.First(f => f.Id == request.FoodOrder.FoodId);
+			var foodOrder = new FoodOrder
+			{
+				Food = food,
+				Count = request.FoodOrder.Count,
+				Comment = request.FoodOrder.Comment
+			};
+
+			var userOrder = order.UserOrders?.FirstOrDefault(o => o.User == user);
+			if (userOrder == null)
+			{
+				if (order.UserOrders == null)
+				{
+					order.UserOrders = new List<UserOrder>();
+				}
+
+				userOrder = new UserOrder()
+				{
+					User = user,
+					FoodOrders = new List<FoodOrder>{ foodOrder }
+				};
+				order.UserOrders.Add(userOrder);
+			}
+			else
+			{
+				userOrder.FoodOrders.Add(foodOrder);
+			}
+
+			await _context.SaveChangesAsync(cancellationToken);
+
+			return Unit.Value;
 		}
 	}
 }

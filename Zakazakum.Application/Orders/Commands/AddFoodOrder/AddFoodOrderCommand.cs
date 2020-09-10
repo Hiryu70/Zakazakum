@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 
 namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
@@ -7,6 +6,6 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 	{
 		public int OrderId { get; set; }
 		
-		public List<FoodOrderVm> FoodOrders { get; set; }
+		public FoodOrderVm FoodOrder { get; set; }
 	}
 }

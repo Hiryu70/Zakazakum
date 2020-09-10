@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,9 +16,11 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 		{
 			_context = context;
 			RuleFor(x => x.OrderId).MustAsync(OrderExists)
-				.WithMessage("Не найден заказ с указанным идентификатором");
-			RuleFor(x => x.FoodOrders).MustAsync(FoodsExist)
-				.WithMessage("Не найдено блюдо с указанным идентификатором");
+				.WithMessage("Заказ не найден.");
+			RuleFor(x => x.FoodOrder.FoodId).MustAsync(FoodExist)
+				.WithMessage("Блюдо не найдено.");
+			RuleFor(x => x.FoodOrder.UserId).MustAsync(UserExists)
+				.WithMessage("Пользователь не найден.");
 		}
 
 		private async Task<bool> OrderExists(AddFoodOrderCommand command, int orderId, CancellationToken cancellationToken)
@@ -34,28 +36,30 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 			return false;
 		}
 
-		private async Task<bool> FoodsExist(AddFoodOrderCommand command, List<FoodOrderVm> foodOrders, CancellationToken cancellationToken)
+		private async Task<bool> FoodExist(AddFoodOrderCommand command, Guid foodId, CancellationToken cancellationToken)
 		{
-			var foodExist = true;
-			var orders = await _context.Orders
+			var order = await _context.Orders
 				.Include(o => o.Restaurant)
 				.Include(o => o.Restaurant.Foods)
-				.ToListAsync(cancellationToken);
-			var order = orders.FirstOrDefault(r => r.Id == command.OrderId);
+				.FirstOrDefaultAsync(r => r.Id == command.OrderId);
 
-			var restrauntFoodIds = order?.Restaurant.Foods.Select(f => f.Id).ToList();
+			var restrauntFoodIds = order?.Restaurant.Foods.Select(f => f.Id == foodId);
 			if (restrauntFoodIds == null)
 				return false;
 
-			foreach (FoodOrderVm foodOrder in foodOrders)
+			return true;
+		}
+
+		private async Task<bool> UserExists(AddFoodOrderCommand command, Guid userId, CancellationToken cancellationToken)
+		{
+			var user = await _context.Users.FirstOrDefaultAsync(r => r.Id == userId);
+
+			if (user != null)
 			{
-				if (!restrauntFoodIds.Contains(foodOrder.FoodId))
-				{
-					foodExist = false;
-				}
+				return true;
 			}
 
-			return foodExist;
+			return false;
 		}
 	}
 }

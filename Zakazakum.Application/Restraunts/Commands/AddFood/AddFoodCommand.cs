@@ -1,6 +1,6 @@
 ﻿using System;
 using MediatR;
-using Zakazakum.Application.Restraunts.Common;
+using Zakazakum.Application.Restraunts.Commands.AddFood;
 
 namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
@@ -8,6 +8,6 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 	{
 		public Guid RestaurantId { get; set; }
 		
-		public FoodVm Food { get; set; }
+		public AddFoodVm Food { get; set; }
 	}
 }
