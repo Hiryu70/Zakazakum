@@ -15,6 +15,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public string RestaurantTitle { get; set; }
 
+		public float DeliveryCost { get; set; }
+
 
 		public void Mapping(Profile profile)
 		{

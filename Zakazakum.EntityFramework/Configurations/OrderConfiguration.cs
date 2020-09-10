@@ -9,8 +9,7 @@ namespace Zakazakum.EntityFramework.Configurations
 		public void Configure(EntityTypeBuilder<Order> builder)
 		{
 			builder.Property(e => e.Id)
-				.HasColumnName("Id")
-				.ValueGeneratedOnAdd();
+				.UseSerialColumn();
 		}
 	}
 }

@@ -34,9 +34,9 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 
 		private async Task<bool> UserExists(CreateOrderCommand command, Guid userId, CancellationToken cancellationToken)
 		{
-			var restaurant = await _context.Users.FirstOrDefaultAsync(r => r.Id == userId);
+			var user = await _context.Users.FirstOrDefaultAsync(r => r.Id == userId);
 
-			if (restaurant != null)
+			if (user != null)
 			{
 				return true;
 			}
