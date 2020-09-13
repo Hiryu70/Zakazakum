@@ -12,7 +12,8 @@ import { UserComponent } from './user/user.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { OrdersListComponent } from './orders-list/orders-list.component';
 import { RestaurantFoodsComponent } from './restaurant-foods/restaurant-foods.component';
-import { OrderFoodsComponent } from './order-foods/order-foods.component';
+import { OrderFoodsReceiptComponent } from './order-foods-receipt/order-foods-receipt.component';
+import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-receipt.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { OrderFoodsComponent } from './order-foods/order-foods.component';
     UsersListComponent,
     OrdersListComponent,
     RestaurantFoodsComponent,
-    OrderFoodsComponent
+    OrderFoodsReceiptComponent,
+    OrderUsersReceiptComponent
   ],
   imports: [
     BrowserModule,

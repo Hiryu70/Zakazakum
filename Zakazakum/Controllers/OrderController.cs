@@ -32,7 +32,7 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <returns>Данные по заказу</returns>
 		[HttpGet("{orderId}")]
-		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrdersVm))]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrderVm))]
 		public async Task<IActionResult> GetById([FromRoute]int orderId)
 		{
 			var vm = await Mediator.Send(new GetOrderQuery() { OrderId = orderId });

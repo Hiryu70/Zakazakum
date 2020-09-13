@@ -18,6 +18,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public float DeliveryCost { get; set; }
 
+		public float DeliveryCostPerUser { get; set; }
+
 		public List<UserReceiptVm> UserReceipts { get; set; }
 
 		public List<FoodReceiptVm> FoodReceipts { get; set; }

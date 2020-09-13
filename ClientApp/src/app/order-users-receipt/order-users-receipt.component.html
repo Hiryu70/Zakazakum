@@ -1,0 +1,31 @@
+<h3>Кому сколько платить</h3>
+<label>Заказ</label>
+<div>
+    <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
+        <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
+    </select>
+</div>
+
+<div>
+    <label>Цена за доставку</label>
+    <div>
+        <input value="{{deliveryCost}}" (keyup)="onDeliveryCostChanged($event)">
+    </div>
+</div>
+
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Тело</th>
+                <th scope="col">Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let userReceipt of userReceipts">
+                <td>{{userReceipt.name}}</td>
+                <td>{{userReceipt.total}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

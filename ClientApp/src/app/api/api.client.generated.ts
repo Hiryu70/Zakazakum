@@ -138,7 +138,7 @@ export class Service {
      * Получить заказ по идентификатору
      * @return Success
      */
-    order3(orderId: number): Observable<GetOrdersVm> {
+    order3(orderId: number): Observable<GetOrderVm> {
         let url_ = this.baseUrl + "/api/order/{orderId}";
         if (orderId === undefined || orderId === null)
             throw new Error("The parameter 'orderId' must be defined.");
@@ -160,14 +160,14 @@ export class Service {
                 try {
                     return this.processOrder3(<any>response_);
                 } catch (e) {
-                    return <Observable<GetOrdersVm>><any>_observableThrow(e);
+                    return <Observable<GetOrderVm>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<GetOrdersVm>><any>_observableThrow(response_);
+                return <Observable<GetOrderVm>><any>_observableThrow(response_);
         }));
     }
 
-    protected processOrder3(response: HttpResponseBase): Observable<GetOrdersVm> {
+    protected processOrder3(response: HttpResponseBase): Observable<GetOrderVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -178,7 +178,7 @@ export class Service {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetOrdersVm.fromJS(resultData200);
+            result200 = GetOrderVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -186,7 +186,7 @@ export class Service {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<GetOrdersVm>(<any>null);
+        return _observableOf<GetOrderVm>(<any>null);
     }
 
     /**
@@ -829,6 +829,170 @@ export class CreateOrderVm implements ICreateOrderVm {
 
 export interface ICreateOrderVm {
     orderId?: number;
+}
+
+export class UserReceiptVm implements IUserReceiptVm {
+    name?: string | undefined;
+    total?: number;
+
+    constructor(data?: IUserReceiptVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["Name"];
+            this.total = _data["Total"];
+        }
+    }
+
+    static fromJS(data: any): UserReceiptVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserReceiptVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Name"] = this.name;
+        data["Total"] = this.total;
+        return data; 
+    }
+}
+
+export interface IUserReceiptVm {
+    name?: string | undefined;
+    total?: number;
+}
+
+export class FoodReceiptVm implements IFoodReceiptVm {
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+
+    constructor(data?: IFoodReceiptVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["Title"];
+            this.comment = _data["Comment"];
+            this.count = _data["Count"];
+        }
+    }
+
+    static fromJS(data: any): FoodReceiptVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new FoodReceiptVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Title"] = this.title;
+        data["Comment"] = this.comment;
+        data["Count"] = this.count;
+        return data; 
+    }
+}
+
+export interface IFoodReceiptVm {
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+}
+
+export class GetOrderVm implements IGetOrderVm {
+    id?: number;
+    ownerName?: string | undefined;
+    created?: Date;
+    restaurantTitle?: string | undefined;
+    deliveryCost?: number;
+    deliveryCostPerUser?: number;
+    userReceipts?: UserReceiptVm[] | undefined;
+    foodReceipts?: FoodReceiptVm[] | undefined;
+
+    constructor(data?: IGetOrderVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.ownerName = _data["OwnerName"];
+            this.created = _data["Created"] ? new Date(_data["Created"].toString()) : <any>undefined;
+            this.restaurantTitle = _data["RestaurantTitle"];
+            this.deliveryCost = _data["DeliveryCost"];
+            this.deliveryCostPerUser = _data["DeliveryCostPerUser"];
+            if (Array.isArray(_data["UserReceipts"])) {
+                this.userReceipts = [] as any;
+                for (let item of _data["UserReceipts"])
+                    this.userReceipts!.push(UserReceiptVm.fromJS(item));
+            }
+            if (Array.isArray(_data["FoodReceipts"])) {
+                this.foodReceipts = [] as any;
+                for (let item of _data["FoodReceipts"])
+                    this.foodReceipts!.push(FoodReceiptVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetOrderVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetOrderVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["OwnerName"] = this.ownerName;
+        data["Created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["RestaurantTitle"] = this.restaurantTitle;
+        data["DeliveryCost"] = this.deliveryCost;
+        data["DeliveryCostPerUser"] = this.deliveryCostPerUser;
+        if (Array.isArray(this.userReceipts)) {
+            data["UserReceipts"] = [];
+            for (let item of this.userReceipts)
+                data["UserReceipts"].push(item.toJSON());
+        }
+        if (Array.isArray(this.foodReceipts)) {
+            data["FoodReceipts"] = [];
+            for (let item of this.foodReceipts)
+                data["FoodReceipts"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGetOrderVm {
+    id?: number;
+    ownerName?: string | undefined;
+    created?: Date;
+    restaurantTitle?: string | undefined;
+    deliveryCost?: number;
+    deliveryCostPerUser?: number;
+    userReceipts?: UserReceiptVm[] | undefined;
+    foodReceipts?: FoodReceiptVm[] | undefined;
 }
 
 export class DeliveryCostVm implements IDeliveryCostVm {

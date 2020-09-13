@@ -1,9 +1,17 @@
-<h3>Корм в кафехе</h3>
+<h3>Заказ корма в кафехе</h3>
 <div>
     <label>Заказ</label>
     <div>
         <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
             <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
+        </select>
+    </div>
+</div>
+<div>
+    <label>Тело</label>
+    <div>
+        <select [(ngModel)]="selectedUser">
+            <option *ngFor="let user of users" [ngValue]="user">{{user.name}}</option>
         </select>
     </div>
 </div>
