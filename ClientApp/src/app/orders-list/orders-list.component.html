@@ -1,1 +1,22 @@
-<p>orders-list works!</p>
+<h3>Заказы</h3>
+<div class="d-flex align-items-end flex-column">
+    <div><button class="btn btn-link" (click)="newOrder()">Че по корму?</button></div>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Кому бабло?</th>
+                <th scope="col">Когда заказывали?</th>
+                <th scope="col">Кафеха</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders">
+                <td>{{order.ownerName}}</td>
+                <td>{{order.created}}</td>
+                <td>{{order.restaurantTitle}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -10,5 +10,7 @@ namespace Zakazakum.Application.Users.Commands.CreateUser
 		public string Name { get; set; }
 
 		public string PhoneNumber { get; set; }
+
+		public string BankName { get; set; }
 	}
 }

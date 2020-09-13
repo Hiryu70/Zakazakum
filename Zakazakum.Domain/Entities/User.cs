@@ -9,5 +9,7 @@ namespace Zakazakum.Domain.Entities
 		public string Name { get; set; }
 
 		public string PhoneNumber { get; set; }
+
+		public string BankName { get; set; }
 	}
 }

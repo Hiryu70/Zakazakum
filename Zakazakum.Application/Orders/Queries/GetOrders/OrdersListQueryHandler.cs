@@ -26,7 +26,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 				.Include(o => o.Owner)
 				.ToListAsync(cancellationToken);
 
-			var ordersVm = _mapper.Map<List<OrderVm>>(orders);
+			var ordersVm = _mapper.Map<List<GetOrdersVm>>(orders);
 
 			var vm = new OrdersListVm
 			{

@@ -13,6 +13,8 @@ namespace Zakazakum.Application.Users.Queries.GetUsers
 
 		public string PhoneNumber { get; set; }
 
+		public string BankName { get; set; }
+
 		public void Mapping(Profile profile)
 		{
 			profile.CreateMap<User, UserVm>();

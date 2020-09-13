@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Zakazakum.Application.Common.Mapping;
 using Zakazakum.Domain.Entities;
 
 namespace Zakazakum.Application.Orders.Queries.GetOrder
 {
-	public class OrderVm : IMapFrom<Order>
+	public class GetOrderVm : IMapFrom<Order>
 	{
 		public int Id { get; set; }
 
@@ -17,10 +18,13 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public float DeliveryCost { get; set; }
 
+		public List<UserReceiptVm> UserReceipts { get; set; }
+
+		public List<FoodReceiptVm> FoodReceipts { get; set; }
 
 		public void Mapping(Profile profile)
 		{
-			profile.CreateMap<Order, OrderVm>()
+			profile.CreateMap<Order, GetOrderVm>()
 				.ForMember(vm => vm.OwnerName, opt => opt.MapFrom(m => m.Owner.Name))
 				.ForMember(vm => vm.RestaurantTitle, opt => opt.MapFrom(m => m.Restaurant.Title));
 		}

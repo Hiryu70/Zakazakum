@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
@@ -20,7 +19,7 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <returns>Список заказов</returns>
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrdersListVm))]
 		public async Task<IActionResult> GetAll()
 		{
 			var vm = await Mediator.Send(new GetOrdersListQuery());
@@ -33,7 +32,7 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <returns>Данные по заказу</returns>
 		[HttpGet("{orderId}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetOrdersVm))]
 		public async Task<IActionResult> GetById([FromRoute]int orderId)
 		{
 			var vm = await Mediator.Send(new GetOrderQuery() { OrderId = orderId });
@@ -46,7 +45,7 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <param name="command">Идентификатор нового заказа</param>
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreateOrderVm))]
 		public async Task<ActionResult<CreateOrderVm>> Create([FromBody]CreateOrderCommand command)
 		{
 			var id = await Mediator.Send(command);

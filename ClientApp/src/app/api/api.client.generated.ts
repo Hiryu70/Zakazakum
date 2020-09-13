@@ -26,11 +26,63 @@ export class Service {
     }
 
     /**
-     * Create new order
-     * @param body (optional) New order ID
+     * Получить все заказы
      * @return Success
      */
-    order(body: CreateOrderCommand | undefined): Observable<CreateOrderVm> {
+    order(): Observable<OrdersListVm> {
+        let url_ = this.baseUrl + "/api/order";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrder(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrder(<any>response_);
+                } catch (e) {
+                    return <Observable<OrdersListVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<OrdersListVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOrder(response: HttpResponseBase): Observable<OrdersListVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OrdersListVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<OrdersListVm>(<any>null);
+    }
+
+    /**
+     * Создать новый заказ
+     * @param body (optional) Идентификатор нового заказа
+     * @return Success
+     */
+    order2(body: CreateOrderCommand | undefined): Observable<CreateOrderVm> {
         let url_ = this.baseUrl + "/api/order";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -47,11 +99,11 @@ export class Service {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processOrder(response_);
+            return this.processOrder2(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processOrder(<any>response_);
+                    return this.processOrder2(<any>response_);
                 } catch (e) {
                     return <Observable<CreateOrderVm>><any>_observableThrow(e);
                 }
@@ -60,7 +112,7 @@ export class Service {
         }));
     }
 
-    protected processOrder(response: HttpResponseBase): Observable<CreateOrderVm> {
+    protected processOrder2(response: HttpResponseBase): Observable<CreateOrderVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -83,9 +135,64 @@ export class Service {
     }
 
     /**
-     * Update delivery cost
-     * @param orderId Order ID
-     * @param body (optional) New delivery cost
+     * Получить заказ по идентификатору
+     * @return Success
+     */
+    order3(orderId: number): Observable<GetOrdersVm> {
+        let url_ = this.baseUrl + "/api/order/{orderId}";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined.");
+        url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrder3(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrder3(<any>response_);
+                } catch (e) {
+                    return <Observable<GetOrdersVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<GetOrdersVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processOrder3(response: HttpResponseBase): Observable<GetOrdersVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetOrdersVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<GetOrdersVm>(<any>null);
+    }
+
+    /**
+     * Обновить стоимость доставки
+     * @param orderId Идентификатор заказа
+     * @param body (optional) Стоимость доставки
      * @return Success
      */
     updateDeliveryCost(orderId: number, body: DeliveryCostVm | undefined): Observable<void> {
@@ -147,12 +254,12 @@ export class Service {
     }
 
     /**
-     * Add food order
-     * @param orderId Order ID
-     * @param body (optional) Food orders
+     * Добавить еду в заказ
+     * @param orderId Идентификатор заказа
+     * @param body (optional) Заказ еды
      * @return Success
      */
-    addFoodOrder(orderId: number, body: FoodOrderVm[] | null | undefined): Observable<void> {
+    addFoodOrder(orderId: number, body: FoodOrderVm | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/order/{orderId}/add-food-order";
         if (orderId === undefined || orderId === null)
             throw new Error("The parameter 'orderId' must be defined.");
@@ -211,7 +318,7 @@ export class Service {
     }
 
     /**
-     * Get all restaurants
+     * Получить все рестораны
      * @return Success
      */
     restaurant(): Observable<RestaurantsListVm> {
@@ -263,11 +370,68 @@ export class Service {
     }
 
     /**
-     * Get all foods in restaurant
-     * @param restaurantId Restaurant ID
+     * Создать новый ресторан
+     * @param body (optional) 
      * @return Success
      */
-    restaurant2(restaurantId: string): Observable<FoodsListVm> {
+    restaurant2(body: CreateRestaurantCommand | undefined): Observable<RestaurantsListVm> {
+        let url_ = this.baseUrl + "/api/restaurant";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRestaurant2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRestaurant2(<any>response_);
+                } catch (e) {
+                    return <Observable<RestaurantsListVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<RestaurantsListVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRestaurant2(response: HttpResponseBase): Observable<RestaurantsListVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RestaurantsListVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<RestaurantsListVm>(<any>null);
+    }
+
+    /**
+     * Получить всю еду в ресторане
+     * @param restaurantId Идентификатор ресторана
+     * @return Success
+     */
+    restaurant3(restaurantId: string): Observable<FoodsListVm> {
         let url_ = this.baseUrl + "/api/restaurant/{restaurantId}";
         if (restaurantId === undefined || restaurantId === null)
             throw new Error("The parameter 'restaurantId' must be defined.");
@@ -283,11 +447,11 @@ export class Service {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRestaurant2(response_);
+            return this.processRestaurant3(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRestaurant2(<any>response_);
+                    return this.processRestaurant3(<any>response_);
                 } catch (e) {
                     return <Observable<FoodsListVm>><any>_observableThrow(e);
                 }
@@ -296,7 +460,7 @@ export class Service {
         }));
     }
 
-    protected processRestaurant2(response: HttpResponseBase): Observable<FoodsListVm> {
+    protected processRestaurant3(response: HttpResponseBase): Observable<FoodsListVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -326,7 +490,64 @@ export class Service {
     }
 
     /**
-     * Get all users
+     * Создать новую еду в ресторане
+     * @param restaurantId Идентификатор ресторана
+     * @param body (optional) Еда
+     * @return Success
+     */
+    food(restaurantId: string, body: AddFoodVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/restaurant/{restaurantId}/food";
+        if (restaurantId === undefined || restaurantId === null)
+            throw new Error("The parameter 'restaurantId' must be defined.");
+        url_ = url_.replace("{restaurantId}", encodeURIComponent("" + restaurantId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFood(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFood(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFood(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * Получить всех пользователей
      * @return Success
      */
     user(): Observable<UsersListVm> {
@@ -378,8 +599,8 @@ export class Service {
     }
 
     /**
-     * Create new user
-     * @param body (optional) New user details
+     * Создать нового пользователя
+     * @param body (optional) Параметры нового пользователя
      * @return Success
      */
     user2(body: CreateUserCommand | undefined): Observable<void> {
@@ -436,6 +657,102 @@ export class Service {
         }
         return _observableOf<void>(<any>null);
     }
+}
+
+export class GetOrdersVm implements IGetOrdersVm {
+    id?: number;
+    ownerName?: string | undefined;
+    created?: Date;
+    restaurantTitle?: string | undefined;
+    restaurantId?: string;
+
+    constructor(data?: IGetOrdersVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.ownerName = _data["OwnerName"];
+            this.created = _data["Created"] ? new Date(_data["Created"].toString()) : <any>undefined;
+            this.restaurantTitle = _data["RestaurantTitle"];
+            this.restaurantId = _data["RestaurantId"];
+        }
+    }
+
+    static fromJS(data: any): GetOrdersVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetOrdersVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["OwnerName"] = this.ownerName;
+        data["Created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["RestaurantTitle"] = this.restaurantTitle;
+        data["RestaurantId"] = this.restaurantId;
+        return data; 
+    }
+}
+
+export interface IGetOrdersVm {
+    id?: number;
+    ownerName?: string | undefined;
+    created?: Date;
+    restaurantTitle?: string | undefined;
+    restaurantId?: string;
+}
+
+export class OrdersListVm implements IOrdersListVm {
+    orders?: GetOrdersVm[] | undefined;
+
+    constructor(data?: IOrdersListVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["Orders"])) {
+                this.orders = [] as any;
+                for (let item of _data["Orders"])
+                    this.orders!.push(GetOrdersVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): OrdersListVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrdersListVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.orders)) {
+            data["Orders"] = [];
+            for (let item of this.orders)
+                data["Orders"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IOrdersListVm {
+    orders?: GetOrdersVm[] | undefined;
 }
 
 export class CreateOrderCommand implements ICreateOrderCommand {
@@ -603,8 +920,8 @@ export interface IProblemDetails {
 }
 
 export class FoodOrderVm implements IFoodOrderVm {
-    id?: string;
     foodId?: string;
+    userId?: string;
     count?: number;
     comment?: string | undefined;
 
@@ -619,8 +936,8 @@ export class FoodOrderVm implements IFoodOrderVm {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["Id"];
             this.foodId = _data["FoodId"];
+            this.userId = _data["UserId"];
             this.count = _data["Count"];
             this.comment = _data["Comment"];
         }
@@ -635,8 +952,8 @@ export class FoodOrderVm implements IFoodOrderVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
         data["FoodId"] = this.foodId;
+        data["UserId"] = this.userId;
         data["Count"] = this.count;
         data["Comment"] = this.comment;
         return data; 
@@ -644,8 +961,8 @@ export class FoodOrderVm implements IFoodOrderVm {
 }
 
 export interface IFoodOrderVm {
-    id?: string;
     foodId?: string;
+    userId?: string;
     count?: number;
     comment?: string | undefined;
 }
@@ -734,13 +1051,49 @@ export interface IRestaurantsListVm {
     restaurants?: RestaurantVm[] | undefined;
 }
 
-export class FoodVm implements IFoodVm {
+export class CreateRestaurantCommand implements ICreateRestaurantCommand {
+    title?: string | undefined;
+
+    constructor(data?: ICreateRestaurantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["Title"];
+        }
+    }
+
+    static fromJS(data: any): CreateRestaurantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRestaurantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Title"] = this.title;
+        return data; 
+    }
+}
+
+export interface ICreateRestaurantCommand {
+    title?: string | undefined;
+}
+
+export class GetFoodVm implements IGetFoodVm {
     id?: string;
     title?: string | undefined;
     cost?: number;
     description?: string | undefined;
 
-    constructor(data?: IFoodVm) {
+    constructor(data?: IGetFoodVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -758,9 +1111,9 @@ export class FoodVm implements IFoodVm {
         }
     }
 
-    static fromJS(data: any): FoodVm {
+    static fromJS(data: any): GetFoodVm {
         data = typeof data === 'object' ? data : {};
-        let result = new FoodVm();
+        let result = new GetFoodVm();
         result.init(data);
         return result;
     }
@@ -775,7 +1128,7 @@ export class FoodVm implements IFoodVm {
     }
 }
 
-export interface IFoodVm {
+export interface IGetFoodVm {
     id?: string;
     title?: string | undefined;
     cost?: number;
@@ -784,7 +1137,7 @@ export interface IFoodVm {
 
 export class FoodsListVm implements IFoodsListVm {
     title?: string | undefined;
-    foods?: FoodVm[] | undefined;
+    foods?: GetFoodVm[] | undefined;
 
     constructor(data?: IFoodsListVm) {
         if (data) {
@@ -801,7 +1154,7 @@ export class FoodsListVm implements IFoodsListVm {
             if (Array.isArray(_data["Foods"])) {
                 this.foods = [] as any;
                 for (let item of _data["Foods"])
-                    this.foods!.push(FoodVm.fromJS(item));
+                    this.foods!.push(GetFoodVm.fromJS(item));
             }
         }
     }
@@ -827,13 +1180,62 @@ export class FoodsListVm implements IFoodsListVm {
 
 export interface IFoodsListVm {
     title?: string | undefined;
-    foods?: FoodVm[] | undefined;
+    foods?: GetFoodVm[] | undefined;
+}
+
+export class AddFoodVm implements IAddFoodVm {
+    id?: string;
+    title?: string | undefined;
+    cost?: number;
+    description?: string | undefined;
+
+    constructor(data?: IAddFoodVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.title = _data["Title"];
+            this.cost = _data["Cost"];
+            this.description = _data["Description"];
+        }
+    }
+
+    static fromJS(data: any): AddFoodVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddFoodVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["Title"] = this.title;
+        data["Cost"] = this.cost;
+        data["Description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IAddFoodVm {
+    id?: string;
+    title?: string | undefined;
+    cost?: number;
+    description?: string | undefined;
 }
 
 export class UserVm implements IUserVm {
     id?: string;
     name?: string | undefined;
     phoneNumber?: string | undefined;
+    bankName?: string | undefined;
 
     constructor(data?: IUserVm) {
         if (data) {
@@ -849,6 +1251,7 @@ export class UserVm implements IUserVm {
             this.id = _data["Id"];
             this.name = _data["Name"];
             this.phoneNumber = _data["PhoneNumber"];
+            this.bankName = _data["BankName"];
         }
     }
 
@@ -864,6 +1267,7 @@ export class UserVm implements IUserVm {
         data["Id"] = this.id;
         data["Name"] = this.name;
         data["PhoneNumber"] = this.phoneNumber;
+        data["BankName"] = this.bankName;
         return data; 
     }
 }
@@ -872,6 +1276,7 @@ export interface IUserVm {
     id?: string;
     name?: string | undefined;
     phoneNumber?: string | undefined;
+    bankName?: string | undefined;
 }
 
 export class UsersListVm implements IUsersListVm {
@@ -922,6 +1327,7 @@ export class CreateUserCommand implements ICreateUserCommand {
     id?: string;
     name?: string | undefined;
     phoneNumber?: string | undefined;
+    bankName?: string | undefined;
 
     constructor(data?: ICreateUserCommand) {
         if (data) {
@@ -937,6 +1343,7 @@ export class CreateUserCommand implements ICreateUserCommand {
             this.id = _data["Id"];
             this.name = _data["Name"];
             this.phoneNumber = _data["PhoneNumber"];
+            this.bankName = _data["BankName"];
         }
     }
 
@@ -952,6 +1359,7 @@ export class CreateUserCommand implements ICreateUserCommand {
         data["Id"] = this.id;
         data["Name"] = this.name;
         data["PhoneNumber"] = this.phoneNumber;
+        data["BankName"] = this.bankName;
         return data; 
     }
 }
@@ -960,6 +1368,7 @@ export interface ICreateUserCommand {
     id?: string;
     name?: string | undefined;
     phoneNumber?: string | undefined;
+    bankName?: string | undefined;
 }
 
 export class ApiException extends Error {

@@ -60,6 +60,7 @@ namespace Zakazakum.API.Controllers
 		/// Создать новую еду в ресторане
 		/// </summary>
 		/// <param name="restaurantId">Идентификатор ресторана</param>
+		/// <param name="food">Еда</param>
 		[HttpPost("{restaurantId}/food")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<IActionResult> Create([FromRoute]Guid restaurantId, [FromBody] AddFoodVm food)

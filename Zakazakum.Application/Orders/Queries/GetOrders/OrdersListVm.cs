@@ -4,6 +4,6 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 {
 	public class OrdersListVm
 	{
-		public IList<OrderVm> Orders { get; set; }
+		public IList<GetOrdersVm> Orders { get; set; }
 	}
 }
