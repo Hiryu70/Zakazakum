@@ -17,6 +17,14 @@ export class UsersListComponent implements OnInit {
     this.refreshList();
   }
 
+  public editUser(user: UserVm) {
+    const initialState = {
+      user: user,
+      usersListComponent: this
+    };
+    this.modalService.show(UserComponent, { initialState });
+  }
+
   newUser(){
     const initialState = {
       user: new UserVm(),

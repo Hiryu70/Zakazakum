@@ -1,5 +1,6 @@
 <div class="modal-header">
-    <h4 class="modal-title">Тело</h4>
+    <h4 *ngIf="user.id == undefined" class="modal-title">Добавить тело</h4>
+    <h4 *ngIf="user.id != undefined" class="modal-title">Редактировать тело</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -28,10 +29,16 @@
                 </div>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Банк</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="bankName" class="form-control" placeholder="Банк" >
+            </div>
+        </div>
 
         <div>
-            <button class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-default" (click)="closeModal()">Close</button>
+            <button class="btn btn-primary">Сохранить</button>
+            <button type="button" class="btn btn-default" (click)="closeModal()">Закрыть</button>
         </div>
     </form>
 </div>

@@ -8,12 +8,14 @@
             <tr>
                 <th scope="col">Имя</th>
                 <th scope="col">Телефон</th>
+                <th scope="col">Банк</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users">
+            <tr *ngFor="let user of users" (click)="editUser(user)">
                 <td>{{user.name}}</td>
                 <td>{{user.phoneNumber}}</td>
+                <td>{{user.bankName}}</td>
             </tr>
         </tbody>
     </table>

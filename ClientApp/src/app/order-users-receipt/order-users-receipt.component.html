@@ -18,12 +18,16 @@
         <thead>
             <tr>
                 <th scope="col">Тело</th>
-                <th scope="col">Сумма</th>
+                <th scope="col">Заказ</th>
+                <th scope="col">Доставка</th>
+                <th scope="col">Всего</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let userReceipt of userReceipts">
                 <td>{{userReceipt.name}}</td>
+                <td>{{userReceipt.foodCost}}</td>
+                <td>{{userReceipt.deliveryCost}}</td>
                 <td>{{userReceipt.total}}</td>
             </tr>
         </tbody>

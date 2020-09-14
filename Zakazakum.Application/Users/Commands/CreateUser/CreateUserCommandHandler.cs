@@ -20,7 +20,8 @@ namespace Zakazakum.Application.Users.Commands.CreateUser
 			var entity = new User
 			{
 				Name = request.Name,
-				PhoneNumber = request.PhoneNumber
+				PhoneNumber = request.PhoneNumber,
+				BankName = request.BankName
 			};
 
 			_context.Users.Add(entity);

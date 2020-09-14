@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Users.Commands.CreateUser;
+using Zakazakum.Application.Users.Commands.UpdateUser;
 using Zakazakum.Application.Users.Queries.GetUsers;
 
 namespace Zakazakum.API.Controllers
@@ -32,6 +33,20 @@ namespace Zakazakum.API.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> Create([FromBody]CreateUserCommand command)
+		{
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Редактировать пользователя
+		/// </summary>
+		/// <param name="command">Новые параметры пользователя</param>
+		[HttpPut]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
 		{
 			await Mediator.Send(command);
 
