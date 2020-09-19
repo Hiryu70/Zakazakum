@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 
-namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
+namespace Zakazakum.Application.Orders.Commands.UpdateFoodOrder
 {
 	public class UpdateFoodOrderCommandValidator : AbstractValidator<UpdateFoodOrderCommand>
 	{

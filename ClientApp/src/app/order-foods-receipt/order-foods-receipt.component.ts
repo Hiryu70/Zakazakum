@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm } from '../api/api.client.generated';
+import { Service, GetOrdersVm, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm, DeleteFoodOrderVm } from '../api/api.client.generated';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 
@@ -56,7 +56,17 @@ export class OrderFoodsReceiptComponent implements OnInit {
     this.modalService.show(AddFoodToOrderComponent, { initialState });
   }
 
-  onDeleteFoodReceipt(foodReceipt){
+  onDeleteFoodOrder(foodOrder: GetFoodOrderVm){
+    let deleteFoodOrderVm = new DeleteFoodOrderVm();
+    deleteFoodOrderVm.id = foodOrder.foodOrderId;
+    deleteFoodOrderVm.userId = foodOrder.userId;
 
+    this.service.foodOrder3(this.selectedOrder.id, deleteFoodOrderVm).subscribe(
+      res => {
+        this.refreshFoodsList();
+      },
+      err => {
+        console.log(err);
+      });
   }
 }

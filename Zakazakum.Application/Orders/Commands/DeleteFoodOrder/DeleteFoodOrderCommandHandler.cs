@@ -5,18 +5,18 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 
-namespace Zakazakum.Application.Orders.Commands.UpdateFoodOrder
+namespace Zakazakum.Application.Orders.Commands.DeleteFoodOrder
 {
-	public class UpdateFoodOrderCommandHandler : IRequestHandler<UpdateFoodOrderCommand>
+	public class DeleteFoodOrderCommandHandler : IRequestHandler<DeleteFoodOrderCommand>
 	{
 		private readonly IZakazakumContext _context;
 
-		public UpdateFoodOrderCommandHandler(IZakazakumContext context)
+		public DeleteFoodOrderCommandHandler(IZakazakumContext context)
 		{
 			_context = context;
 		}
 
-		public async Task<Unit> Handle(UpdateFoodOrderCommand request, CancellationToken cancellationToken)
+		public async Task<Unit> Handle(DeleteFoodOrderCommand request, CancellationToken cancellationToken)
 		{
 			var order = await _context.Orders
 				.Include(o => o.UserOrders)
@@ -24,14 +24,10 @@ namespace Zakazakum.Application.Orders.Commands.UpdateFoodOrder
 				.FirstAsync(o => o.Id == request.OrderId);
 			var user = await _context.Users.FirstAsync(u => u.Id == request.FoodOrder.UserId);
 
-			var food = order.Restaurant.Foods.First(f => f.Id == request.FoodOrder.FoodId);
-
 			var userOrder = order.UserOrders?.FirstOrDefault(o => o.User == user);
 			var foodOrder = userOrder.FoodOrders.FirstOrDefault(fo => fo.Id == request.FoodOrder.Id);
 
-			foodOrder.Food = food;
-			foodOrder.Count = request.FoodOrder.Count;
-			foodOrder.Comment = request.FoodOrder.Comment;
+			userOrder.FoodOrders.Remove(foodOrder);
 
 			await _context.SaveChangesAsync(cancellationToken);
 

@@ -382,6 +382,70 @@ export class Service {
     }
 
     /**
+     * Удалить еду в заказе
+     * @param orderId Идентификатор заказа
+     * @param body (optional) Заказ еды
+     * @return Success
+     */
+    foodOrder3(orderId: number, body: DeleteFoodOrderVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/order/{orderId}/food-order";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined.");
+        url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFoodOrder3(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFoodOrder3(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFoodOrder3(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Установить статус оплаты заказа пользователем
      * @param orderId Идентификатор заказа
      * @param body (optional) Статус оплаты заказа пользователем
@@ -1526,6 +1590,46 @@ export interface IUpdateFoodOrderVm {
     userId?: string;
     count?: number;
     comment?: string | undefined;
+}
+
+export class DeleteFoodOrderVm implements IDeleteFoodOrderVm {
+    id?: string;
+    userId?: string;
+
+    constructor(data?: IDeleteFoodOrderVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.userId = _data["UserId"];
+        }
+    }
+
+    static fromJS(data: any): DeleteFoodOrderVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteFoodOrderVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["UserId"] = this.userId;
+        return data; 
+    }
+}
+
+export interface IDeleteFoodOrderVm {
+    id?: string;
+    userId?: string;
 }
 
 export class UserPaidStatusVm implements IUserPaidStatusVm {

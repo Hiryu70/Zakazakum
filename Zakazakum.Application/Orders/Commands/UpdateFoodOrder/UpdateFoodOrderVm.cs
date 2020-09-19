@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
+namespace Zakazakum.Application.Orders.Commands.UpdateFoodOrder
 {
 	public class UpdateFoodOrderVm
 	{

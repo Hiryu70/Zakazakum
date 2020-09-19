@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
+using Zakazakum.Application.Orders.Commands.DeleteFoodOrder;
 using Zakazakum.Application.Orders.Commands.SetUserPaidStatus;
 using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
+using Zakazakum.Application.Orders.Commands.UpdateFoodOrder;
 using Zakazakum.Application.Orders.Queries.GetOrder;
 using Zakazakum.Application.Orders.Queries.GetOrders;
 
@@ -105,6 +107,26 @@ namespace Zakazakum.API.Controllers
 		public async Task<IActionResult> AddFoodOrder([FromBody] UpdateFoodOrderVm foodOrder, [FromRoute] int orderId)
 		{
 			var command = new UpdateFoodOrderCommand
+			{
+				FoodOrder = foodOrder,
+				OrderId = orderId
+			};
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Удалить еду в заказе
+		/// </summary>
+		/// <param name="foodOrder">Заказ еды</param>
+		/// <param name="orderId">Идентификатор заказа</param>
+		[HttpDelete("{orderId}/food-order")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> AddFoodOrder([FromBody] DeleteFoodOrderVm foodOrder, [FromRoute] int orderId)
+		{
+			var command = new DeleteFoodOrderCommand
 			{
 				FoodOrder = foodOrder,
 				OrderId = orderId
