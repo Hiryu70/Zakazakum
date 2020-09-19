@@ -26,7 +26,9 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public List<UserReceiptVm> UserReceipts { get; set; }
 
-		public List<FoodReceiptVm> FoodReceipts { get; set; }
+		public List<FoodGroupedReceiptVm> FoodGroupedReceipts { get; set; }
+
+		public List<GetFoodOrderVm> FoodReceipts { get; set; }
 
 		public void Mapping(Profile profile)
 		{

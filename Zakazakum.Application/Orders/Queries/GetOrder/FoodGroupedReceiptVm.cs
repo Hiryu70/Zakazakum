@@ -1,6 +1,6 @@
 ﻿namespace Zakazakum.Application.Orders.Queries.GetOrder
 {
-	public class FoodReceiptVm
+	public class FoodGroupedReceiptVm
 	{
 		public string Title { get; set; }
 

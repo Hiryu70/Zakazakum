@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, FoodReceiptVm } from '../api/api.client.generated';
-
+import { Service, GetOrdersVm, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm } from '../api/api.client.generated';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 
 @Component({
   selector: 'app-order-foods-receipt',
@@ -9,10 +10,11 @@ import { Service, GetOrdersVm, FoodReceiptVm } from '../api/api.client.generated
 })
 export class OrderFoodsReceiptComponent implements OnInit {
   public orders: GetOrdersVm[];
-  public foodReceipts: FoodReceiptVm[];
+  public foodOrders: GetFoodOrderVm[];
+  public foodGroupedReceipts: FoodGroupedReceiptVm[];
   public selectedOrder: GetOrdersVm;
 
-  constructor(private service: Service) { }
+  constructor(private service: Service, private modalService: BsModalService) { }
 
   ngOnInit() {
     this.refreshOrdersList();
@@ -31,9 +33,30 @@ export class OrderFoodsReceiptComponent implements OnInit {
     });
   }
 
-  refreshFoodsList(){
+  public refreshFoodsList(){
     this.service.order3(this.selectedOrder.id).subscribe(result => {
-      this.foodReceipts = result.foodReceipts;
+      this.foodOrders = result.foodReceipts;
+      this.foodGroupedReceipts = result.foodGroupedReceipts;
     });
+  }
+
+  onEditFoodOrder(foodOrder: GetFoodOrderVm){
+    var foodOrderVm = new AddFoodOrderVm();
+    foodOrderVm.userId = foodOrder.userId;
+    foodOrderVm.count = foodOrder.count;
+    foodOrderVm.foodId = foodOrder.foodId;
+    foodOrderVm.id = foodOrder.foodOrderId;
+
+    const initialState = {
+      orderFoodsReceiptComponent: this,
+      foodTitle: foodOrder.title,
+      foodOrder: foodOrderVm,
+      orderId: this.selectedOrder.id
+    }
+    this.modalService.show(AddFoodToOrderComponent, { initialState });
+  }
+
+  onDeleteFoodReceipt(foodReceipt){
+
   }
 }

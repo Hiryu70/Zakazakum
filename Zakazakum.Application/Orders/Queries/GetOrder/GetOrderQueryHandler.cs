@@ -56,20 +56,40 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 				vm.UserReceipts.Add(userReceipt);
 			}
 
-			vm.FoodReceipts = new List<FoodReceiptVm>();
+			vm.FoodReceipts = new List<GetFoodOrderVm>();
+			foreach(var userOrder in order.UserOrders)
+			{
+				foreach (var foodOrder in userOrder.FoodOrders)
+				{
+					var newFoodRecept = new GetFoodOrderVm
+					{
+						FoodOrderId = foodOrder.Id,
+						FoodId = foodOrder.Food.Id,
+						Title = foodOrder.Food.Title,
+						Comment = foodOrder.Comment,
+						Count = foodOrder.Count,
+						UserId = userOrder.User.Id,
+						UserName = userOrder.User.Name
+					};
+
+					vm.FoodReceipts.Add(newFoodRecept);
+				}
+			}
+
+			vm.FoodGroupedReceipts = new List<FoodGroupedReceiptVm>();
 			var foodOrders = order.UserOrders.SelectMany(uo => uo.FoodOrders);
 			foreach (var foodOrder in foodOrders)
 			{
-				var foodReceipt = vm.FoodReceipts.FirstOrDefault(fr => fr.Title == foodOrder.Food.Title && fr.Comment == foodOrder.Comment);
+				var foodReceipt = vm.FoodGroupedReceipts.FirstOrDefault(fr => fr.Title == foodOrder.Food.Title && fr.Comment == foodOrder.Comment);
 				if (foodReceipt == null)
 				{
-					var newFoodRecept = new FoodReceiptVm
+					var newFoodRecept = new FoodGroupedReceiptVm
 					{
 						Title = foodOrder.Food.Title,
 						Comment = foodOrder.Comment,
 						Count = foodOrder.Count
 					};
-					vm.FoodReceipts.Add(newFoodRecept);
+					vm.FoodGroupedReceipts.Add(newFoodRecept);
 				}
 				else
 				{

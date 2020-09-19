@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, GetFoodVm, UserVm, FoodOrderVm, } from '../api/api.client.generated';
+import { Service, GetOrdersVm, GetFoodVm, UserVm, AddFoodOrderVm, } from '../api/api.client.generated';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from '../food/food.component';
@@ -34,7 +34,7 @@ export class RestaurantFoodsComponent implements OnInit {
   }
 
   onAddFoodToOrder(food) {
-    var foodOrder = new FoodOrderVm();
+    var foodOrder = new AddFoodOrderVm();
     foodOrder.userId = this.selectedUser.id;
     foodOrder.count = 1;
     foodOrder.foodId = food.id;

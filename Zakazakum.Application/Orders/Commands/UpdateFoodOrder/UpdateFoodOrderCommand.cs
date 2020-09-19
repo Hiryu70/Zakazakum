@@ -2,10 +2,10 @@
 
 namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
-	public class AddFoodOrderCommand : IRequest
+	public class UpdateFoodOrderCommand : IRequest
 	{
 		public int OrderId { get; set; }
 		
-		public AddFoodOrderVm FoodOrder { get; set; }
+		public UpdateFoodOrderVm FoodOrder { get; set; }
 	}
 }

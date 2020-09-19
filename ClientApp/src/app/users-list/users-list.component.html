@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users" (click)="editUser(user)">
+            <tr *ngFor="let user of users" (click)="editUser(user)" style="cursor: pointer;">
                 <td>{{user.name}}</td>
                 <td>{{user.phoneNumber}}</td>
                 <td>{{user.bankName}}</td>

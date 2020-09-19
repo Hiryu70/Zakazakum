@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, FoodOrderVm, } from '../api/api.client.generated';
+import { Service, AddFoodOrderVm, UpdateFoodOrderVm } from '../api/api.client.generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { OrderFoodsReceiptComponent } from '../order-foods-receipt/order-foods-receipt.component';
 
 
 @Component({
@@ -10,7 +11,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: []
 })
 export class AddFoodToOrderComponent implements OnInit {
-  public foodOrder: FoodOrderVm;
+  public orderFoodsReceiptComponent: OrderFoodsReceiptComponent;
+  public foodOrder: AddFoodOrderVm;
   public foodTitle: string;
   public orderId: number;
   registerForm: FormGroup;
@@ -38,9 +40,26 @@ export class AddFoodToOrderComponent implements OnInit {
       this.foodOrder.count = this.registerForm.controls['count'].value;
       this.foodOrder.comment = this.registerForm.controls['comment'].value;
 
-      this.service.addFoodOrder(this.orderId, this.foodOrder).subscribe(
+      this.service.foodOrder(this.orderId, this.foodOrder).subscribe(
         res => {
           this.bsModalRef.hide();
+        },
+        err => {
+          console.log(err);
+        });
+    }
+    else{
+      let updateFoodOrder = new UpdateFoodOrderVm();
+      updateFoodOrder.count = this.registerForm.controls['count'].value;
+      updateFoodOrder.comment = this.registerForm.controls['comment'].value;
+      updateFoodOrder.id = this.foodOrder.id;
+      updateFoodOrder.userId = this.foodOrder.userId;
+      updateFoodOrder.foodId = this.foodOrder.foodId;
+
+      this.service.foodOrder2(this.orderId, updateFoodOrder).subscribe(
+        res => {
+          this.bsModalRef.hide();
+          this.orderFoodsReceiptComponent.refreshFoodsList();
         },
         err => {
           console.log(err);

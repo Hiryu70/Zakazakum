@@ -259,8 +259,8 @@ export class Service {
      * @param body (optional) Заказ еды
      * @return Success
      */
-    addFoodOrder(orderId: number, body: FoodOrderVm | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/order/{orderId}/add-food-order";
+    foodOrder(orderId: number, body: AddFoodOrderVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/order/{orderId}/food-order";
         if (orderId === undefined || orderId === null)
             throw new Error("The parameter 'orderId' must be defined.");
         url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
@@ -278,11 +278,11 @@ export class Service {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddFoodOrder(response_);
+            return this.processFoodOrder(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAddFoodOrder(<any>response_);
+                    return this.processFoodOrder(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -291,7 +291,71 @@ export class Service {
         }));
     }
 
-    protected processAddFoodOrder(response: HttpResponseBase): Observable<void> {
+    protected processFoodOrder(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * Редактировать еду в заказе
+     * @param orderId Идентификатор заказа
+     * @param body (optional) Заказ еды
+     * @return Success
+     */
+    foodOrder2(orderId: number, body: UpdateFoodOrderVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/order/{orderId}/food-order";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined.");
+        url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFoodOrder2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFoodOrder2(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFoodOrder2(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1068,12 +1132,12 @@ export interface IUserReceiptVm {
     isOrderPaid?: boolean;
 }
 
-export class FoodReceiptVm implements IFoodReceiptVm {
+export class FoodGroupedReceiptVm implements IFoodGroupedReceiptVm {
     title?: string | undefined;
     comment?: string | undefined;
     count?: number;
 
-    constructor(data?: IFoodReceiptVm) {
+    constructor(data?: IFoodGroupedReceiptVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1090,9 +1154,9 @@ export class FoodReceiptVm implements IFoodReceiptVm {
         }
     }
 
-    static fromJS(data: any): FoodReceiptVm {
+    static fromJS(data: any): FoodGroupedReceiptVm {
         data = typeof data === 'object' ? data : {};
-        let result = new FoodReceiptVm();
+        let result = new FoodGroupedReceiptVm();
         result.init(data);
         return result;
     }
@@ -1106,10 +1170,70 @@ export class FoodReceiptVm implements IFoodReceiptVm {
     }
 }
 
-export interface IFoodReceiptVm {
+export interface IFoodGroupedReceiptVm {
     title?: string | undefined;
     comment?: string | undefined;
     count?: number;
+}
+
+export class GetFoodOrderVm implements IGetFoodOrderVm {
+    foodOrderId?: string;
+    foodId?: string;
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+    userId?: string;
+    userName?: string | undefined;
+
+    constructor(data?: IGetFoodOrderVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.foodOrderId = _data["FoodOrderId"];
+            this.foodId = _data["FoodId"];
+            this.title = _data["Title"];
+            this.comment = _data["Comment"];
+            this.count = _data["Count"];
+            this.userId = _data["UserId"];
+            this.userName = _data["UserName"];
+        }
+    }
+
+    static fromJS(data: any): GetFoodOrderVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFoodOrderVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["FoodOrderId"] = this.foodOrderId;
+        data["FoodId"] = this.foodId;
+        data["Title"] = this.title;
+        data["Comment"] = this.comment;
+        data["Count"] = this.count;
+        data["UserId"] = this.userId;
+        data["UserName"] = this.userName;
+        return data; 
+    }
+}
+
+export interface IGetFoodOrderVm {
+    foodOrderId?: string;
+    foodId?: string;
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+    userId?: string;
+    userName?: string | undefined;
 }
 
 export class GetOrderVm implements IGetOrderVm {
@@ -1122,7 +1246,8 @@ export class GetOrderVm implements IGetOrderVm {
     deliveryCost?: number;
     deliveryCostPerUser?: number;
     userReceipts?: UserReceiptVm[] | undefined;
-    foodReceipts?: FoodReceiptVm[] | undefined;
+    foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
+    foodReceipts?: GetFoodOrderVm[] | undefined;
 
     constructor(data?: IGetOrderVm) {
         if (data) {
@@ -1148,10 +1273,15 @@ export class GetOrderVm implements IGetOrderVm {
                 for (let item of _data["UserReceipts"])
                     this.userReceipts!.push(UserReceiptVm.fromJS(item));
             }
+            if (Array.isArray(_data["FoodGroupedReceipts"])) {
+                this.foodGroupedReceipts = [] as any;
+                for (let item of _data["FoodGroupedReceipts"])
+                    this.foodGroupedReceipts!.push(FoodGroupedReceiptVm.fromJS(item));
+            }
             if (Array.isArray(_data["FoodReceipts"])) {
                 this.foodReceipts = [] as any;
                 for (let item of _data["FoodReceipts"])
-                    this.foodReceipts!.push(FoodReceiptVm.fromJS(item));
+                    this.foodReceipts!.push(GetFoodOrderVm.fromJS(item));
             }
         }
     }
@@ -1178,6 +1308,11 @@ export class GetOrderVm implements IGetOrderVm {
             for (let item of this.userReceipts)
                 data["UserReceipts"].push(item.toJSON());
         }
+        if (Array.isArray(this.foodGroupedReceipts)) {
+            data["FoodGroupedReceipts"] = [];
+            for (let item of this.foodGroupedReceipts)
+                data["FoodGroupedReceipts"].push(item.toJSON());
+        }
         if (Array.isArray(this.foodReceipts)) {
             data["FoodReceipts"] = [];
             for (let item of this.foodReceipts)
@@ -1197,7 +1332,8 @@ export interface IGetOrderVm {
     deliveryCost?: number;
     deliveryCostPerUser?: number;
     userReceipts?: UserReceiptVm[] | undefined;
-    foodReceipts?: FoodReceiptVm[] | undefined;
+    foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
+    foodReceipts?: GetFoodOrderVm[] | undefined;
 }
 
 export class DeliveryCostVm implements IDeliveryCostVm {
@@ -1288,14 +1424,14 @@ export interface IProblemDetails {
     instance?: string | undefined;
 }
 
-export class FoodOrderVm implements IFoodOrderVm {
+export class AddFoodOrderVm implements IAddFoodOrderVm {
     id?: string;
     foodId?: string;
     userId?: string;
     count?: number;
     comment?: string | undefined;
 
-    constructor(data?: IFoodOrderVm) {
+    constructor(data?: IAddFoodOrderVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1314,9 +1450,9 @@ export class FoodOrderVm implements IFoodOrderVm {
         }
     }
 
-    static fromJS(data: any): FoodOrderVm {
+    static fromJS(data: any): AddFoodOrderVm {
         data = typeof data === 'object' ? data : {};
-        let result = new FoodOrderVm();
+        let result = new AddFoodOrderVm();
         result.init(data);
         return result;
     }
@@ -1332,7 +1468,59 @@ export class FoodOrderVm implements IFoodOrderVm {
     }
 }
 
-export interface IFoodOrderVm {
+export interface IAddFoodOrderVm {
+    id?: string;
+    foodId?: string;
+    userId?: string;
+    count?: number;
+    comment?: string | undefined;
+}
+
+export class UpdateFoodOrderVm implements IUpdateFoodOrderVm {
+    id?: string;
+    foodId?: string;
+    userId?: string;
+    count?: number;
+    comment?: string | undefined;
+
+    constructor(data?: IUpdateFoodOrderVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.foodId = _data["FoodId"];
+            this.userId = _data["UserId"];
+            this.count = _data["Count"];
+            this.comment = _data["Comment"];
+        }
+    }
+
+    static fromJS(data: any): UpdateFoodOrderVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateFoodOrderVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["FoodId"] = this.foodId;
+        data["UserId"] = this.userId;
+        data["Count"] = this.count;
+        data["Comment"] = this.comment;
+        return data; 
+    }
+}
+
+export interface IUpdateFoodOrderVm {
     id?: string;
     foodId?: string;
     userId?: string;

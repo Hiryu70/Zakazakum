@@ -2,7 +2,7 @@
 
 namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
-	public class FoodOrderVm
+	public class AddFoodOrderVm
 	{
 		public Guid Id { get; set; }
 

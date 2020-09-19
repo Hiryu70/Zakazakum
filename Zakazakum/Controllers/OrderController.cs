@@ -79,12 +79,32 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <param name="foodOrder">Заказ еды</param>
 		/// <param name="orderId">Идентификатор заказа</param>
-		[HttpPost("{orderId}/add-food-order")]
+		[HttpPost("{orderId}/food-order")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<IActionResult> AddFoodOrder([FromBody]FoodOrderVm foodOrder, [FromRoute] int orderId)
+		public async Task<IActionResult> AddFoodOrder([FromBody]AddFoodOrderVm foodOrder, [FromRoute] int orderId)
 		{
 			var command = new AddFoodOrderCommand
+			{
+				FoodOrder = foodOrder,
+				OrderId = orderId
+			};
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Редактировать еду в заказе
+		/// </summary>
+		/// <param name="foodOrder">Заказ еды</param>
+		/// <param name="orderId">Идентификатор заказа</param>
+		[HttpPut("{orderId}/food-order")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> AddFoodOrder([FromBody] UpdateFoodOrderVm foodOrder, [FromRoute] int orderId)
+		{
+			var command = new UpdateFoodOrderCommand
 			{
 				FoodOrder = foodOrder,
 				OrderId = orderId
