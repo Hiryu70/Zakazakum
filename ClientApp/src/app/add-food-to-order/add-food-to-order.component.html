@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{foodTitle}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <input type="hidden" class="Id" [value]="foodOrder.Id">
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Количество</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="count" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.count.errors }">
+                <div *ngIf="submitted && f.count.errors" class="invalid-feedback">
+                    <div *ngIf="f.count.errors.required">Введи количество епта</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Примечание</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="comment" class="form-control" placeholder="Примечание" >
+            </div>
+        </div>
+
+        <div>
+            <button class="btn btn-primary">Сохранить</button>
+            <button type="button" class="btn btn-default" (click)="closeModal()">Закрыть</button>
+        </div>
+    </form>
+</div>

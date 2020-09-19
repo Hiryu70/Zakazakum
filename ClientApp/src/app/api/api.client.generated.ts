@@ -1152,6 +1152,7 @@ export interface IProblemDetails {
 }
 
 export class FoodOrderVm implements IFoodOrderVm {
+    id?: string;
     foodId?: string;
     userId?: string;
     count?: number;
@@ -1168,6 +1169,7 @@ export class FoodOrderVm implements IFoodOrderVm {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["Id"];
             this.foodId = _data["FoodId"];
             this.userId = _data["UserId"];
             this.count = _data["Count"];
@@ -1184,6 +1186,7 @@ export class FoodOrderVm implements IFoodOrderVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
         data["FoodId"] = this.foodId;
         data["UserId"] = this.userId;
         data["Count"] = this.count;
@@ -1193,6 +1196,7 @@ export class FoodOrderVm implements IFoodOrderVm {
 }
 
 export interface IFoodOrderVm {
+    id?: string;
     foodId?: string;
     userId?: string;
     count?: number;

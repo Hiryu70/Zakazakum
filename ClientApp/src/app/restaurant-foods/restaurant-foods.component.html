@@ -23,6 +23,7 @@
                 <th scope="col">Корм</th>
                 <th scope="col">Цена</th>
                 <th scope="col">Описание</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,9 @@
                 <td>{{food.title}}</td>
                 <td>{{food.cost}}</td>
                 <td>{{food.description}}</td>
+                <td>
+                    <i class="fas fa-cart-plus fa-lg" (click)="onAddFoodToOrder(food.id, food.title);$event.stopPropagation()"></i>
+                </td>
             </tr>
         </tbody>
     </table>

@@ -15,6 +15,7 @@ import { RestaurantFoodsComponent } from './restaurant-foods/restaurant-foods.co
 import { OrderFoodsReceiptComponent } from './order-foods-receipt/order-foods-receipt.component';
 import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-receipt.component';
 import { OrderComponent } from './order/order.component';
+import { AddFoodToOrderComponent } from './add-food-to-order/add-food-to-order.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { OrderComponent } from './order/order.component';
     RestaurantFoodsComponent,
     OrderFoodsReceiptComponent,
     OrderUsersReceiptComponent,
-    OrderComponent
+    OrderComponent,
+    AddFoodToOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +39,8 @@ import { OrderComponent } from './order/order.component';
   ],
   entryComponents: [ 
     UserComponent,
-    OrderComponent
+    OrderComponent,
+    AddFoodToOrderComponent
   ],
   providers: [
     { provide: API_BASE_URL, useValue: "http://localhost:5000" },

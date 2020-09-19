@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, GetFoodVm, UserVm } from '../api/api.client.generated';
+import { Service, GetOrdersVm, GetFoodVm, UserVm, FoodOrderVm, } from '../api/api.client.generated';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
+
 
 @Component({
   selector: 'app-restaurant-foods',
@@ -13,33 +16,47 @@ export class RestaurantFoodsComponent implements OnInit {
   public selectedOrder: GetOrdersVm;
   public foods: GetFoodVm[];
 
-  constructor(private service: Service) { }
+  constructor(private service: Service, private modalService: BsModalService) { }
 
   ngOnInit() {
     this.refreshOrdersList();
     this.refreshUsersList();
   }
 
-  orderChanged(){
-    if (this.selectedOrder != undefined){
+  onAddFoodToOrder(foodId, foodTitle) {
+    var foodOrder = new FoodOrderVm();
+    foodOrder.userId = this.selectedUser.id;
+    foodOrder.count = 1;
+    foodOrder.foodId = foodId;
+
+    const initialState = {
+      foodTitle: foodTitle,
+      foodOrder: foodOrder,
+      orderId: this.selectedOrder.id
+    }
+    this.modalService.show(AddFoodToOrderComponent, { initialState });
+  }
+
+  orderChanged() {
+    if (this.selectedOrder != undefined) {
       this.refreshFoodsList();
     }
   }
 
-  refreshFoodsList(){
+  refreshFoodsList() {
     this.service.restaurant3(this.selectedOrder.restaurantId).subscribe(result => {
       this.foods = result.foods;
     });
   }
 
-  refreshOrdersList(){
+  refreshOrdersList() {
     this.service.order().subscribe(result => {
       this.orders = result.orders;
       this.orderChanged();
     });
   }
 
-  refreshUsersList(){
+  refreshUsersList() {
     this.service.user().subscribe(result => {
       this.users = result.users;
     });

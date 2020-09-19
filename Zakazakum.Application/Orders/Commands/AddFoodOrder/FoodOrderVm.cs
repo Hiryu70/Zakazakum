@@ -4,6 +4,8 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 {
 	public class FoodOrderVm
 	{
+		public Guid Id { get; set; }
+
 		public Guid FoodId { get; set; }
 
 		public Guid UserId { get; set; }

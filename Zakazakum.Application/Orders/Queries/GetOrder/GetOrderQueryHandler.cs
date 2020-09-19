@@ -26,9 +26,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 			var order = await _context.Orders
 				.Include(o => o.Restaurant)
 				.Include(o => o.Owner)
-				.Include(o => o.UserOrders)
-				.ThenInclude(uo => uo.FoodOrders)
-				.ThenInclude(fo => fo.Food)
+				.Include(o => o.UserOrders).ThenInclude(uo => uo.FoodOrders).ThenInclude(fo => fo.Food)
+				.Include(o => o.UserOrders).ThenInclude(uo => uo.User)
 				.FirstOrDefaultAsync(o => o.Id == request.OrderId);
 
 			var vm = _mapper.Map<GetOrderVm>(order);
