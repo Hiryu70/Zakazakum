@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, UserReceiptVm, DeliveryCostVm } from '../api/api.client.generated';
+import { Service, GetOrdersVm, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm } from '../api/api.client.generated';
 
 @Component({
   selector: 'app-order-users-receipt',
@@ -37,6 +37,18 @@ export class OrderUsersReceiptComponent implements OnInit {
       this.userReceipts = result.userReceipts;
       this.deliveryCost = result.deliveryCost;
     });
+  }
+
+  onOrderPaidChanged(userId:string, event: any){
+    if (this.selectedOrder != undefined){
+      let userPaidStatusVm = new UserPaidStatusVm();
+      userPaidStatusVm.isPaid = event.target.checked;
+      userPaidStatusVm.userId = userId;
+
+      this.service.setUserPaid(this.selectedOrder.id, userPaidStatusVm).subscribe(() => {
+        this.refreshReceiptsList();
+      });
+    }
   }
 
   onDeliveryCostChanged(event: any) {

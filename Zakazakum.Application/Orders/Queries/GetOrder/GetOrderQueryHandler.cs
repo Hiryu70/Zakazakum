@@ -45,7 +45,9 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 					FoodCost = foodCost,
 					DeliveryCost = deliveryCost,
 					Total = foodCost + deliveryCost,
-					Name = userOrder.User.Name
+					Name = userOrder.User.Name,
+					IsOrderPaid = userOrder.IsOrderPaid,
+					UserId = userOrder.User.Id
 				};
 
 				vm.UserReceipts.Add(userReceipt);

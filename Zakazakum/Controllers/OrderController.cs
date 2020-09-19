@@ -92,5 +92,26 @@ namespace Zakazakum.API.Controllers
 
 			return NoContent();
 		}
+
+		/// <summary>
+		/// Установить статус оплаты заказа пользователем
+		/// </summary>
+		/// <param name="userPaidStatus">Статус оплаты заказа пользователем</param>
+		/// <param name="orderId">Идентификатор заказа</param>
+		[HttpPost("{orderId}/set-user-paid")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> SetUserPaidStatus([FromBody] UserPaidStatusVm userPaidStatus, [FromRoute] int orderId)
+		{
+			var command = new SetUserPaidStatusCommand
+			{
+				IsPaid = userPaidStatus.IsPaid,
+				UserId = userPaidStatus.UserId,
+				OrderId = orderId
+			};
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
 	}
 }

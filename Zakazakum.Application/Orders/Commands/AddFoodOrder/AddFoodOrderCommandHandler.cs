@@ -20,7 +20,10 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 
 		public async Task<Unit> Handle(AddFoodOrderCommand request, CancellationToken cancellationToken)
 		{
-			var order = await _context.Orders.FirstAsync(o => o.Id == request.OrderId);
+			var order = await _context.Orders
+				.Include(o => o.UserOrders)
+				.ThenInclude(uo => uo.FoodOrders)
+				.FirstAsync(o => o.Id == request.OrderId);
 			var user = await _context.Users.FirstAsync(u => u.Id == request.FoodOrder.UserId);
 
 			var food = order.Restaurant.Foods.First(f => f.Id == request.FoodOrder.FoodId);

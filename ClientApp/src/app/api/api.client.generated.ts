@@ -318,6 +318,70 @@ export class Service {
     }
 
     /**
+     * Установить статус оплаты заказа пользователем
+     * @param orderId Идентификатор заказа
+     * @param body (optional) Статус оплаты заказа пользователем
+     * @return Success
+     */
+    setUserPaid(orderId: number, body: UserPaidStatusVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/order/{orderId}/set-user-paid";
+        if (orderId === undefined || orderId === null)
+            throw new Error("The parameter 'orderId' must be defined.");
+        url_ = url_.replace("{orderId}", encodeURIComponent("" + orderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetUserPaid(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetUserPaid(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetUserPaid(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Получить все рестораны
      * @return Success
      */
@@ -892,10 +956,12 @@ export interface ICreateOrderVm {
 }
 
 export class UserReceiptVm implements IUserReceiptVm {
+    userId?: string;
     name?: string | undefined;
     total?: number;
     foodCost?: number;
     deliveryCost?: number;
+    isOrderPaid?: boolean;
 
     constructor(data?: IUserReceiptVm) {
         if (data) {
@@ -908,10 +974,12 @@ export class UserReceiptVm implements IUserReceiptVm {
 
     init(_data?: any) {
         if (_data) {
+            this.userId = _data["UserId"];
             this.name = _data["Name"];
             this.total = _data["Total"];
             this.foodCost = _data["FoodCost"];
             this.deliveryCost = _data["DeliveryCost"];
+            this.isOrderPaid = _data["IsOrderPaid"];
         }
     }
 
@@ -924,19 +992,23 @@ export class UserReceiptVm implements IUserReceiptVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["UserId"] = this.userId;
         data["Name"] = this.name;
         data["Total"] = this.total;
         data["FoodCost"] = this.foodCost;
         data["DeliveryCost"] = this.deliveryCost;
+        data["IsOrderPaid"] = this.isOrderPaid;
         return data; 
     }
 }
 
 export interface IUserReceiptVm {
+    userId?: string;
     name?: string | undefined;
     total?: number;
     foodCost?: number;
     deliveryCost?: number;
+    isOrderPaid?: boolean;
 }
 
 export class FoodReceiptVm implements IFoodReceiptVm {
@@ -1201,6 +1273,46 @@ export interface IFoodOrderVm {
     userId?: string;
     count?: number;
     comment?: string | undefined;
+}
+
+export class UserPaidStatusVm implements IUserPaidStatusVm {
+    isPaid?: boolean;
+    userId?: string;
+
+    constructor(data?: IUserPaidStatusVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isPaid = _data["IsPaid"];
+            this.userId = _data["UserId"];
+        }
+    }
+
+    static fromJS(data: any): UserPaidStatusVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPaidStatusVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["IsPaid"] = this.isPaid;
+        data["UserId"] = this.userId;
+        return data; 
+    }
+}
+
+export interface IUserPaidStatusVm {
+    isPaid?: boolean;
+    userId?: string;
 }
 
 export class RestaurantVm implements IRestaurantVm {

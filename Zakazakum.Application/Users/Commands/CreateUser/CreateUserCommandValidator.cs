@@ -17,7 +17,7 @@ namespace Zakazakum.Application.Users.Commands.CreateUser
 			RuleFor(x => x.Name).NotEmpty();
 			RuleFor(x => x.PhoneNumber).MustAsync(UniquePhoneNumber)
 				.When(x => !string.IsNullOrEmpty(x.PhoneNumber))
-				.WithMessage("Номер телефона должен быть уникален");
+				.WithMessage("Номер телефона должен быть уникален.");
 			RuleFor(x => x.PhoneNumber).Length(11)
 				.When(x => !string.IsNullOrEmpty(x.PhoneNumber));
 		}

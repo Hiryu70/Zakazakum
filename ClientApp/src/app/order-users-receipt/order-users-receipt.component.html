@@ -21,6 +21,7 @@
                 <th scope="col">Заказ</th>
                 <th scope="col">Доставка</th>
                 <th scope="col">Всего</th>
+                <th scope="col">Перевел</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,7 @@
                 <td>{{userReceipt.foodCost}}</td>
                 <td>{{userReceipt.deliveryCost}}</td>
                 <td>{{userReceipt.total}}</td>
+                <td><input type="checkbox" [checked]="userReceipt.isOrderPaid" (change)="onOrderPaidChanged(userReceipt.userId,$event)"></td>
             </tr>
         </tbody>
     </table>

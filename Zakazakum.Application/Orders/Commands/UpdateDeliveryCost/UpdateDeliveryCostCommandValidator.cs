@@ -14,7 +14,7 @@ namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
 		{
 			_context = context;
 			RuleFor(x => x.OrderId).MustAsync(OrderExists)
-				.WithMessage("Не найден заказ с указанным идентификатором");
+				.WithMessage("Заказ не найден.");
 			RuleFor(x => x.DeliveryCost).GreaterThanOrEqualTo(0);
 		}
 
