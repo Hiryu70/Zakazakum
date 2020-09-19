@@ -11,6 +11,9 @@ export class OrderUsersReceiptComponent implements OnInit {
   public userReceipts: UserReceiptVm[];
   public selectedOrder: GetOrdersVm;
   public deliveryCost: number;
+  public ownerName: string;
+  public ownerBank: string;
+  public ownerPhoneNumber: string;
 
   constructor(private service: Service) { }
 
@@ -36,6 +39,9 @@ export class OrderUsersReceiptComponent implements OnInit {
     this.service.order3(this.selectedOrder.id).subscribe(result => {
       this.userReceipts = result.userReceipts;
       this.deliveryCost = result.deliveryCost;
+      this.ownerName = result.ownerName;
+      this.ownerBank = result.ownerBank;
+      this.ownerPhoneNumber = result.ownerPhoneNumber;
     });
   }
 

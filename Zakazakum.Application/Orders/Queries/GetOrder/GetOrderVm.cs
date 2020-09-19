@@ -12,6 +12,10 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public string OwnerName { get; set; }
 
+		public string OwnerBank { get; set; }
+
+		public string OwnerPhoneNumber { get; set; }
+
 		public DateTime Created { get; set; }
 
 		public string RestaurantTitle { get; set; }

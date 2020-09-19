@@ -1058,6 +1058,8 @@ export interface IFoodReceiptVm {
 export class GetOrderVm implements IGetOrderVm {
     id?: number;
     ownerName?: string | undefined;
+    ownerBank?: string | undefined;
+    ownerPhoneNumber?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
     deliveryCost?: number;
@@ -1078,6 +1080,8 @@ export class GetOrderVm implements IGetOrderVm {
         if (_data) {
             this.id = _data["Id"];
             this.ownerName = _data["OwnerName"];
+            this.ownerBank = _data["OwnerBank"];
+            this.ownerPhoneNumber = _data["OwnerPhoneNumber"];
             this.created = _data["Created"] ? new Date(_data["Created"].toString()) : <any>undefined;
             this.restaurantTitle = _data["RestaurantTitle"];
             this.deliveryCost = _data["DeliveryCost"];
@@ -1106,6 +1110,8 @@ export class GetOrderVm implements IGetOrderVm {
         data = typeof data === 'object' ? data : {};
         data["Id"] = this.id;
         data["OwnerName"] = this.ownerName;
+        data["OwnerBank"] = this.ownerBank;
+        data["OwnerPhoneNumber"] = this.ownerPhoneNumber;
         data["Created"] = this.created ? this.created.toISOString() : <any>undefined;
         data["RestaurantTitle"] = this.restaurantTitle;
         data["DeliveryCost"] = this.deliveryCost;
@@ -1127,6 +1133,8 @@ export class GetOrderVm implements IGetOrderVm {
 export interface IGetOrderVm {
     id?: number;
     ownerName?: string | undefined;
+    ownerBank?: string | undefined;
+    ownerPhoneNumber?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
     deliveryCost?: number;
