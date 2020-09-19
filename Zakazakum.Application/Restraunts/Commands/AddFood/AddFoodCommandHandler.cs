@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 using Zakazakum.Domain.Entities;
 
-namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
+namespace Zakazakum.Application.Restraunts.Commands.AddFood
 {
 	public class AddFoodCommandHandler : IRequestHandler<AddFoodCommand>
 	{

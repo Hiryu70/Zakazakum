@@ -1,4 +1,7 @@
 <h3>Заказ корма в кафехе</h3>
+<div class="d-flex align-items-end flex-column">
+    <div><button class="btn btn-link" (click)="newFood()">Добавить корм</button></div>
+</div>
 <div>
     <label>Заказ</label>
     <div>
@@ -27,12 +30,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let food of foods">
+            <tr *ngFor="let food of foods" (click)="onAddFoodToOrder(food)" style="cursor: pointer;">
                 <td>{{food.title}}</td>
                 <td>{{food.cost}}</td>
                 <td>{{food.description}}</td>
                 <td>
-                    <i class="fas fa-cart-plus fa-lg" (click)="onAddFoodToOrder(food.id, food.title);$event.stopPropagation()"></i>
+                    <i class="fas fa-hamburger fa-lg" (click)="onEditFood(food);$event.stopPropagation()"></i>
                 </td>
             </tr>
         </tbody>

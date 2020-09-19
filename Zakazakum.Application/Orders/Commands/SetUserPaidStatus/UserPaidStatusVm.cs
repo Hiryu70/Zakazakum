@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
+namespace Zakazakum.Application.Orders.Commands.SetUserPaidStatus
 {
 	public class UserPaidStatusVm
 	{

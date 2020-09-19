@@ -5,7 +5,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 
-namespace Zakazakum.Application.Orders.Commands.UpdateDeliveryCost
+namespace Zakazakum.Application.Orders.Commands.SetUserPaidStatus
 {
 	public class SetUserPaidStatusCommandValidator : AbstractValidator<SetUserPaidStatusCommand>
 	{

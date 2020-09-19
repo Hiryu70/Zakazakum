@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Service, GetOrdersVm, GetFoodVm, UserVm, FoodOrderVm, } from '../api/api.client.generated';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
+import { FoodComponent } from '../food/food.component';
 
 
 @Component({
@@ -23,18 +24,36 @@ export class RestaurantFoodsComponent implements OnInit {
     this.refreshUsersList();
   }
 
-  onAddFoodToOrder(foodId, foodTitle) {
+  newFood(){
+    const initialState = {
+      food: new GetFoodVm(),
+      restaurantId: this.selectedOrder.restaurantId,
+      restaurantFoodsComponent: this
+    }
+    this.modalService.show(FoodComponent, { initialState });
+  }
+
+  onAddFoodToOrder(food) {
     var foodOrder = new FoodOrderVm();
     foodOrder.userId = this.selectedUser.id;
     foodOrder.count = 1;
-    foodOrder.foodId = foodId;
+    foodOrder.foodId = food.id;
 
     const initialState = {
-      foodTitle: foodTitle,
+      foodTitle: food.title,
       foodOrder: foodOrder,
       orderId: this.selectedOrder.id
     }
     this.modalService.show(AddFoodToOrderComponent, { initialState });
+  }
+
+  onEditFood(food) {
+    const initialState = {
+      food: food,
+      restaurantId: this.selectedOrder.restaurantId,
+      restaurantFoodsComponent: this
+    }
+    this.modalService.show(FoodComponent, { initialState });
   }
 
   orderChanged() {

@@ -5,13 +5,13 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 
-namespace Zakazakum.Application.Restraunts.Commands.AddFood
+namespace Zakazakum.Application.Restraunts.Commands.EditFood
 {
-	public class AddFoodCommandValidator : AbstractValidator<AddFoodCommand>
+	public class EditFoodCommandValidator : AbstractValidator<EditFoodCommand>
 	{
 		private readonly IZakazakumContext _context;
 
-		public AddFoodCommandValidator(IZakazakumContext context)
+		public EditFoodCommandValidator(IZakazakumContext context)
 		{
 			_context = context;
 			RuleFor(x => x.RestaurantId).MustAsync(RestaurantExists)
@@ -19,7 +19,7 @@ namespace Zakazakum.Application.Restraunts.Commands.AddFood
 			RuleFor(x => x.Food.Title).NotEmpty();
 		}
 
-		private async Task<bool> RestaurantExists(AddFoodCommand command, Guid id, CancellationToken cancellationToken)
+		private async Task<bool> RestaurantExists(EditFoodCommand command, Guid id, CancellationToken cancellationToken)
 		{
 			var restaurant = await _context.Restaurants.FirstOrDefaultAsync(r => r.Id == id);
 

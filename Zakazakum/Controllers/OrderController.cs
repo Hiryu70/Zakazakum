@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
+using Zakazakum.Application.Orders.Commands.SetUserPaidStatus;
 using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
 using Zakazakum.Application.Orders.Queries.GetOrder;
 using Zakazakum.Application.Orders.Queries.GetOrders;

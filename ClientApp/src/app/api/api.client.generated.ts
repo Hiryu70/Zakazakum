@@ -611,6 +611,63 @@ export class Service {
     }
 
     /**
+     * Редактировать еду в ресторане
+     * @param restaurantId Идентификатор ресторана
+     * @param body (optional) Еда
+     * @return Success
+     */
+    food2(restaurantId: string, body: EditFoodVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/restaurant/{restaurantId}/food";
+        if (restaurantId === undefined || restaurantId === null)
+            throw new Error("The parameter 'restaurantId' must be defined.");
+        url_ = url_.replace("{restaurantId}", encodeURIComponent("" + restaurantId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFood2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFood2(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFood2(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Получить всех пользователей
      * @return Success
      */
@@ -1581,6 +1638,54 @@ export class AddFoodVm implements IAddFoodVm {
 }
 
 export interface IAddFoodVm {
+    id?: string;
+    title?: string | undefined;
+    cost?: number;
+    description?: string | undefined;
+}
+
+export class EditFoodVm implements IEditFoodVm {
+    id?: string;
+    title?: string | undefined;
+    cost?: number;
+    description?: string | undefined;
+
+    constructor(data?: IEditFoodVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.title = _data["Title"];
+            this.cost = _data["Cost"];
+            this.description = _data["Description"];
+        }
+    }
+
+    static fromJS(data: any): EditFoodVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditFoodVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["Title"] = this.title;
+        data["Cost"] = this.cost;
+        data["Description"] = this.description;
+        return data; 
+    }
+}
+
+export interface IEditFoodVm {
     id?: string;
     title?: string | undefined;
     cost?: number;
