@@ -57,16 +57,18 @@ export class OrderFoodsReceiptComponent implements OnInit {
   }
 
   onDeleteFoodOrder(foodOrder: GetFoodOrderVm){
-    let deleteFoodOrderVm = new DeleteFoodOrderVm();
-    deleteFoodOrderVm.id = foodOrder.foodOrderId;
-    deleteFoodOrderVm.userId = foodOrder.userId;
-
-    this.service.foodOrder3(this.selectedOrder.id, deleteFoodOrderVm).subscribe(
-      res => {
-        this.refreshFoodsList();
-      },
-      err => {
-        console.log(err);
-      });
+    if (confirm('Действительно удалить из кормешки?')) {
+      let deleteFoodOrderVm = new DeleteFoodOrderVm();
+      deleteFoodOrderVm.id = foodOrder.foodOrderId;
+      deleteFoodOrderVm.userId = foodOrder.userId;
+  
+      this.service.foodOrder3(this.selectedOrder.id, deleteFoodOrderVm).subscribe(
+        res => {
+          this.refreshFoodsList();
+        },
+        err => {
+          console.log(err);
+        });
+    }
   }
 }

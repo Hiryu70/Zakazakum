@@ -1,6 +1,6 @@
-<h3>Корм в заказе</h3>
+<h3>Список корма в кормежке</h3>
 <div>
-    <label>Заказ</label>
+    <label>Кормежка</label>
     <div>
         <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
             <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
@@ -9,7 +9,7 @@
 </div>
 
 <div>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Корм</th>
@@ -28,7 +28,7 @@
 </div>
 
 <div>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Тело</th>
@@ -40,16 +40,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let foodOrder of foodOrders" style="cursor: pointer;">
+            <tr *ngFor="let foodOrder of foodOrders">
                 <td>{{foodOrder.userName}}</td>
                 <td>{{foodOrder.title}}</td>
                 <td>{{foodOrder.comment}}</td>
                 <td>{{foodOrder.count}}</td>
                 <td>
-                    <i class="fas fa-edit fa-lg" (click)="onEditFoodOrder(foodOrder);$event.stopPropagation()"></i>
+                    <i class="fas fa-edit fa-lg" (click)="onEditFoodOrder(foodOrder);$event.stopPropagation()" style="cursor: pointer;"></i>
                 </td>
                 <td>
-                    <i class="fas fa-trash-alt fa-lg" (click)="onDeleteFoodOrder(foodOrder);$event.stopPropagation()"></i>
+                    <i class="fas fa-trash-alt fa-lg" (click)="onDeleteFoodOrder(foodOrder);$event.stopPropagation()" style="cursor: pointer;"></i>
                 </td>
             </tr>
         </tbody>

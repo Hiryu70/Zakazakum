@@ -1,9 +1,9 @@
-<h3>Заказ корма в кафехе</h3>
+<h3>Заказать корм</h3>
 <div class="d-flex align-items-end flex-column">
-    <div><button class="btn btn-link" (click)="newFood()">Добавить корм</button></div>
+    <div><button class="btn btn-link" (click)="newFood()">Новый корм</button></div>
 </div>
 <div>
-    <label>Заказ</label>
+    <label>Кормежка</label>
     <div>
         <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
             <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
@@ -11,7 +11,7 @@
     </div>
 </div>
 <div>
-    <label>Тело</label>
+    <label>Кому заказываем</label>
     <div>
         <select [(ngModel)]="selectedUser">
             <option *ngFor="let user of users" [ngValue]="user">{{user.name}}</option>
@@ -35,7 +35,7 @@
                 <td>{{food.cost}}</td>
                 <td>{{food.description}}</td>
                 <td>
-                    <i class="fas fa-hamburger fa-lg" (click)="onEditFood(food);$event.stopPropagation()"></i>
+                    <i class="fas fa-edit fa-lg" (click)="onEditFood(food);$event.stopPropagation()"></i>
                 </td>
             </tr>
         </tbody>

@@ -3,19 +3,23 @@
     <div><button class="btn btn-link" (click)="newUser()">Добавить тело</button></div>
 </div>
 <div>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Имя</th>
                 <th scope="col">Телефон</th>
                 <th scope="col">Банк</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let user of users" (click)="editUser(user)" style="cursor: pointer;">
+            <tr *ngFor="let user of users">
                 <td>{{user.name}}</td>
                 <td>{{user.phoneNumber}}</td>
                 <td>{{user.bankName}}</td>
+                <td>
+                    <i class="fas fa-edit fa-lg" (click)="editUser(user);$event.stopPropagation()" style="cursor: pointer;"></i>
+                </td>
             </tr>
         </tbody>
     </table>

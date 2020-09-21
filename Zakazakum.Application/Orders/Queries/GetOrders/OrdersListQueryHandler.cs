@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -24,6 +25,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 			var orders = await _context.Orders
 				.Include(o => o.Restaurant)
 				.Include(o => o.Owner)
+				.OrderBy(o => o.Created)
 				.ToListAsync(cancellationToken);
 
 			var ordersVm = _mapper.Map<List<GetOrdersVm>>(orders);

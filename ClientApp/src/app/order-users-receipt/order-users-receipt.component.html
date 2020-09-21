@@ -1,5 +1,5 @@
-<h3>Кому сколько платить</h3>
-<label>Заказ</label>
+<h3>Кто сколько должен</h3>
+<label>Кормежка</label>
 <div>
     <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
         <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
@@ -12,14 +12,14 @@
         <input value="{{deliveryCost}}" (keyup)="onDeliveryCostChanged($event)">
     </div>
 
-    <label> Кому: {{ownerName}} </label><br>
+    <label> Кому переводить: {{ownerName}} </label><br>
     <label> Банк: {{ownerBank}} </label><br>
-    <label> Телефон: {{ownerPhoneNumber}} </label><br>
+    <label> Номер телефона: {{ownerPhoneNumber}} </label><br>
 
 </div>
 
 <div>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">Тело</th>
@@ -36,7 +36,7 @@
                 <td>{{userReceipt.deliveryCost}}</td>
                 <td>{{userReceipt.total}}</td>
                 <td>
-                    <input type="checkbox" [checked]="userReceipt.isOrderPaid" (change)="onOrderPaidChanged(userReceipt.userId,$event)">
+                    <input type="checkbox" [checked]="userReceipt.isOrderPaid" (change)="onOrderPaidChanged(userReceipt.userId,$event)" style="cursor: pointer;">
                 </td>
             </tr>
         </tbody>
