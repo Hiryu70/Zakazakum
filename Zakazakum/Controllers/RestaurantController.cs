@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Restraunts.Commands.AddFood;
 using Zakazakum.Application.Restraunts.Commands.CreateRestaurant;
+using Zakazakum.Application.Restraunts.Commands.DeleteFood;
 using Zakazakum.Application.Restraunts.Commands.EditFood;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
 using Zakazakum.Application.Restraunts.Queries.GetRestaurants;
@@ -80,6 +81,20 @@ namespace Zakazakum.API.Controllers
 		public async Task<IActionResult> Update([FromRoute] Guid restaurantId, [FromBody] EditFoodVm food)
 		{
 			await Mediator.Send(new EditFoodCommand { Food = food, RestaurantId = restaurantId });
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Удалить еду в ресторане
+		/// </summary>
+		/// <param name="restaurantId">Идентификатор ресторана</param>
+		/// <param name="food">Еда</param>
+		[HttpDelete("{restaurantId}/food")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<IActionResult> Delete([FromRoute] Guid restaurantId, [FromBody] DeleteFoodVm food)
+		{
+			await Mediator.Send(new DeleteFoodCommand { Food = food, RestaurantId = restaurantId });
 
 			return NoContent();
 		}

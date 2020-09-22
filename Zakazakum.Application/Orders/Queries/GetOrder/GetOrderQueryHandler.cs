@@ -56,6 +56,11 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 				vm.UserReceipts.Add(userReceipt);
 			}
 
+			vm.TotalCost = order.DeliveryCost + order.UserOrders
+				.SelectMany(uo => uo.FoodOrders)
+				.Select(fo => fo.Count * fo.Food.Cost)
+				.Sum();
+
 			vm.FoodReceipts = new List<GetFoodOrderVm>();
 			foreach(var userOrder in order.UserOrders)
 			{

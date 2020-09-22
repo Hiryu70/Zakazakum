@@ -11,6 +11,7 @@ export class OrderUsersReceiptComponent implements OnInit {
   public userReceipts: UserReceiptVm[];
   public selectedOrder: GetOrdersVm;
   public deliveryCost: number;
+  public totalCost: number;
   public ownerName: string;
   public ownerBank: string;
   public ownerPhoneNumber: string;
@@ -42,6 +43,7 @@ export class OrderUsersReceiptComponent implements OnInit {
       this.ownerName = result.ownerName;
       this.ownerBank = result.ownerBank;
       this.ownerPhoneNumber = result.ownerPhoneNumber;
+      this.totalCost = result.totalCost;
     });
   }
 

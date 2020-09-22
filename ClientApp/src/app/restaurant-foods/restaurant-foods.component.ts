@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, GetFoodVm, UserVm, AddFoodOrderVm, } from '../api/api.client.generated';
+import { Service, GetOrdersVm, GetFoodVm, UserVm, AddFoodOrderVm, DeleteFoodVm } from '../api/api.client.generated';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from '../food/food.component';
@@ -24,7 +24,7 @@ export class RestaurantFoodsComponent implements OnInit {
     this.refreshUsersList();
   }
 
-  newFood(){
+  onCreateFood(){
     const initialState = {
       food: new GetFoodVm(),
       restaurantId: this.selectedOrder.restaurantId,
@@ -56,6 +56,21 @@ export class RestaurantFoodsComponent implements OnInit {
     this.modalService.show(FoodComponent, { initialState });
   }
 
+  onDeleteFood(food: GetFoodVm){
+    if (confirm('Удалить корм из кафехи?')) {
+      let deleteFoodVm = new DeleteFoodVm();
+      deleteFoodVm.id = food.id;
+  
+      this.service.food3(this.selectedOrder.restaurantId, deleteFoodVm).subscribe(
+        res => {
+          this.refreshFoodsList();
+        },
+        err => {
+          console.log(err);
+        });
+    }
+  }
+
   orderChanged() {
     if (this.selectedOrder != undefined) {
       this.refreshFoodsList();
@@ -80,5 +95,4 @@ export class RestaurantFoodsComponent implements OnInit {
       this.users = result.users;
     });
   }
-
 }

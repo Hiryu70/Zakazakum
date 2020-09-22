@@ -39,6 +39,13 @@
                     <input type="checkbox" [checked]="userReceipt.isOrderPaid" (change)="onOrderPaidChanged(userReceipt.userId,$event)" style="cursor: pointer;">
                 </td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Всего:</td>
+                <td>{{totalCost}}</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </div>

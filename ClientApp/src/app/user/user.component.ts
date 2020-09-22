@@ -20,7 +20,7 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       name: [this.user.name, [Validators.required]],
-      phoneNumber: [this.user.phoneNumber, [Validators.required, Validators.minLength(11)]],
+      phoneNumber: [this.user.phoneNumber, [Validators.required, Validators.minLength(11), Validators.pattern("^[0-9]*$")]],
       bankName: [this.user.bankName]
     });
   }

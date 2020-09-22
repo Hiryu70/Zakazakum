@@ -28,7 +28,11 @@
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Цена</label>
             <div class="col-sm-9">
-                <input type="text" formControlName="cost" class="form-control" placeholder="Бесплатно что-ли?" >
+                <input type="text" formControlName="cost" class="form-control" placeholder="Бесплатно что-ли?"
+                [ngClass]="{ 'is-invalid': submitted && f.cost.errors }" >
+                <div *ngIf="submitted && f.cost.errors" class="invalid-feedback">
+                    <div *ngIf="f.cost.errors.max">А не дохуя ли?</div>
+                </div>
             </div>
         </div>
 

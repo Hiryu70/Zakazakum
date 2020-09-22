@@ -25,7 +25,8 @@
                     [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" placeholder="79998887766" maxlength="11">
                 <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
                     <div *ngIf="f.phoneNumber.errors.required">Введи телефон епта</div>
-                    <div *ngIf="f.phoneNumber.errors.minLength">Больше цифер введи</div>
+                    <div *ngIf="f.phoneNumber.errors.minlength">Введи больше цифр</div>
+                    <div *ngIf="f.phoneNumber.errors.pattern">Нормально введи цифрами</div>
                 </div>
             </div>
         </div>

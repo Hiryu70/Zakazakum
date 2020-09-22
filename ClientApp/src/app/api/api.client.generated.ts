@@ -796,6 +796,63 @@ export class Service {
     }
 
     /**
+     * Удалить еду в ресторане
+     * @param restaurantId Идентификатор ресторана
+     * @param body (optional) Еда
+     * @return Success
+     */
+    food3(restaurantId: string, body: DeleteFoodVm | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/restaurant/{restaurantId}/food";
+        if (restaurantId === undefined || restaurantId === null)
+            throw new Error("The parameter 'restaurantId' must be defined.");
+        url_ = url_.replace("{restaurantId}", encodeURIComponent("" + restaurantId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFood3(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFood3(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFood3(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Получить всех пользователей
      * @return Success
      */
@@ -1309,6 +1366,7 @@ export class GetOrderVm implements IGetOrderVm {
     restaurantTitle?: string | undefined;
     deliveryCost?: number;
     deliveryCostPerUser?: number;
+    totalCost?: number;
     userReceipts?: UserReceiptVm[] | undefined;
     foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
     foodReceipts?: GetFoodOrderVm[] | undefined;
@@ -1332,6 +1390,7 @@ export class GetOrderVm implements IGetOrderVm {
             this.restaurantTitle = _data["RestaurantTitle"];
             this.deliveryCost = _data["DeliveryCost"];
             this.deliveryCostPerUser = _data["DeliveryCostPerUser"];
+            this.totalCost = _data["TotalCost"];
             if (Array.isArray(_data["UserReceipts"])) {
                 this.userReceipts = [] as any;
                 for (let item of _data["UserReceipts"])
@@ -1367,6 +1426,7 @@ export class GetOrderVm implements IGetOrderVm {
         data["RestaurantTitle"] = this.restaurantTitle;
         data["DeliveryCost"] = this.deliveryCost;
         data["DeliveryCostPerUser"] = this.deliveryCostPerUser;
+        data["TotalCost"] = this.totalCost;
         if (Array.isArray(this.userReceipts)) {
             data["UserReceipts"] = [];
             for (let item of this.userReceipts)
@@ -1395,6 +1455,7 @@ export interface IGetOrderVm {
     restaurantTitle?: string | undefined;
     deliveryCost?: number;
     deliveryCostPerUser?: number;
+    totalCost?: number;
     userReceipts?: UserReceiptVm[] | undefined;
     foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
     foodReceipts?: GetFoodOrderVm[] | undefined;
@@ -1982,6 +2043,42 @@ export interface IEditFoodVm {
     title?: string | undefined;
     cost?: number;
     description?: string | undefined;
+}
+
+export class DeleteFoodVm implements IDeleteFoodVm {
+    id?: string;
+
+    constructor(data?: IDeleteFoodVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+        }
+    }
+
+    static fromJS(data: any): DeleteFoodVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeleteFoodVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IDeleteFoodVm {
+    id?: string;
 }
 
 export class UserVm implements IUserVm {

@@ -1,6 +1,6 @@
 <h3>Заказать корм</h3>
 <div class="d-flex align-items-end flex-column">
-    <div><button class="btn btn-link" (click)="newFood()">Новый корм</button></div>
+    <div><button class="btn btn-link" (click)="onCreateFood()">Новый корм</button></div>
 </div>
 <div>
     <label>Кормежка</label>
@@ -27,6 +27,7 @@
                 <th scope="col">Цена</th>
                 <th scope="col">Описание</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,9 @@
                 <td>{{food.description}}</td>
                 <td>
                     <i class="fas fa-edit fa-lg" (click)="onEditFood(food);$event.stopPropagation()"></i>
+                </td>
+                <td>
+                    <i class="fas fa-trash-alt fa-lg" (click)="onDeleteFood(food);$event.stopPropagation()" style="cursor: pointer;"></i>
                 </td>
             </tr>
         </tbody>

@@ -24,6 +24,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public float DeliveryCostPerUser { get; set; }
 
+		public float TotalCost { get; set; }
+
 		public List<UserReceiptVm> UserReceipts { get; set; }
 
 		public List<FoodGroupedReceiptVm> FoodGroupedReceipts { get; set; }

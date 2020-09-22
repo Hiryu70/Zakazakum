@@ -45,6 +45,7 @@ export class OrderFoodsReceiptComponent implements OnInit {
     foodOrderVm.userId = foodOrder.userId;
     foodOrderVm.count = foodOrder.count;
     foodOrderVm.foodId = foodOrder.foodId;
+    foodOrderVm.comment = foodOrder.comment;
     foodOrderVm.id = foodOrder.foodOrderId;
 
     const initialState = {

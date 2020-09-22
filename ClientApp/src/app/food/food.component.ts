@@ -22,7 +22,7 @@ export class FoodComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       title: [this.food.title, [Validators.required]],
       description: [this.food.description],
-      cost: [this.food.cost]
+      cost: [this.food.cost, [Validators.max(10000)]]
     });
   }
 
@@ -35,7 +35,7 @@ export class FoodComponent implements OnInit {
       return;
     }
 
-    let cost = this.registerForm.controls['cost'].value ? 0 : this.registerForm.controls['cost'].value;
+    let cost = this.registerForm.controls['cost'].value ? this.registerForm.controls['cost'].value : 0;
     if (this.food.id === undefined) {
       let createFoodCommand = new AddFoodVm();
       createFoodCommand.id = this.food.id;

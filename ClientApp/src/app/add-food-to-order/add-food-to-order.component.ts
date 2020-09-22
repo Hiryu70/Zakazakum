@@ -22,7 +22,7 @@ export class AddFoodToOrderComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      count: [this.foodOrder.count, [Validators.required]],
+      count: [this.foodOrder.count, [Validators.required, Validators.min(1)]],
       comment: [this.foodOrder.comment]
     });
   }

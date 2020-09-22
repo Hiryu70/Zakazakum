@@ -14,6 +14,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f.count.errors }">
                 <div *ngIf="submitted && f.count.errors" class="invalid-feedback">
                     <div *ngIf="f.count.errors.required">Введи количество епта</div>
+                    <div *ngIf="f.count.errors.min">Введи нормальное количество епта</div>
                 </div>
             </div>
         </div>
