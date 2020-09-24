@@ -1,8 +1,20 @@
 <div class="container">
-    <app-restaurants-list></app-restaurants-list>
+    <!-- <app-restaurants-list></app-restaurants-list>
     <app-users-list></app-users-list>
     <app-orders-list></app-orders-list>
     <app-restaurant-foods></app-restaurant-foods>
     <app-order-foods-receipt></app-order-foods-receipt>
-    <app-order-users-receipt></app-order-users-receipt>
+    <app-order-users-receipt></app-order-users-receipt> -->
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active">Че по корму?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/users" routerLinkActive="active">Тела</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/orders" routerLinkActive="active">Кормежки</a>
+        </li>
+      </ul>
+    <router-outlet></router-outlet>
 </div>

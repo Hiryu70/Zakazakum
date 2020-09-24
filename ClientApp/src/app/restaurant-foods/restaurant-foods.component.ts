@@ -3,7 +3,7 @@ import { Service, GetOrdersVm, GetFoodVm, UserVm, AddFoodOrderVm, DeleteFoodVm }
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from '../food/food.component';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-restaurant-foods',
@@ -11,17 +11,28 @@ import { FoodComponent } from '../food/food.component';
   styleUrls: []
 })
 export class RestaurantFoodsComponent implements OnInit {
+  public id: number;
+  private sub: any;
+
   public users: UserVm[];
   public selectedUser: UserVm;
   public orders: GetOrdersVm[];
   public selectedOrder: GetOrdersVm;
   public foods: GetFoodVm[];
 
-  constructor(private service: Service, private modalService: BsModalService) { }
+  constructor(private service: Service, private modalService: BsModalService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+   });
+
     this.refreshOrdersList();
     this.refreshUsersList();
+  }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   onCreateFood(){
