@@ -20,6 +20,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public string RestaurantTitle { get; set; }
 
+		public Guid RestaurantId { get; set; }
+
 		public float DeliveryCost { get; set; }
 
 		public float DeliveryCostPerUser { get; set; }
@@ -36,7 +38,11 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 		{
 			profile.CreateMap<Order, GetOrderVm>()
 				.ForMember(vm => vm.OwnerName, opt => opt.MapFrom(m => m.Owner.Name))
-				.ForMember(vm => vm.RestaurantTitle, opt => opt.MapFrom(m => m.Restaurant.Title));
+				.ForMember(vm => vm.RestaurantTitle, opt => opt.MapFrom(m => m.Restaurant.Title))
+				.ForMember(vm => vm.RestaurantId, opt => opt.MapFrom(m => m.Restaurant.Id))
+				.ForMember(vm => vm.OwnerName, opt => opt.MapFrom(m => m.Owner.Name))
+				.ForMember(vm => vm.OwnerBank, opt => opt.MapFrom(m => m.Owner.BankName))
+				.ForMember(vm => vm.OwnerPhoneNumber, opt => opt.MapFrom(m => m.Owner.PhoneNumber));
 		}
 	}
 }

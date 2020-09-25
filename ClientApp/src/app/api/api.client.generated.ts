@@ -1364,6 +1364,7 @@ export class GetOrderVm implements IGetOrderVm {
     ownerPhoneNumber?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
+    restaurantId?: string;
     deliveryCost?: number;
     deliveryCostPerUser?: number;
     totalCost?: number;
@@ -1388,6 +1389,7 @@ export class GetOrderVm implements IGetOrderVm {
             this.ownerPhoneNumber = _data["OwnerPhoneNumber"];
             this.created = _data["Created"] ? new Date(_data["Created"].toString()) : <any>undefined;
             this.restaurantTitle = _data["RestaurantTitle"];
+            this.restaurantId = _data["RestaurantId"];
             this.deliveryCost = _data["DeliveryCost"];
             this.deliveryCostPerUser = _data["DeliveryCostPerUser"];
             this.totalCost = _data["TotalCost"];
@@ -1424,6 +1426,7 @@ export class GetOrderVm implements IGetOrderVm {
         data["OwnerPhoneNumber"] = this.ownerPhoneNumber;
         data["Created"] = this.created ? this.created.toISOString() : <any>undefined;
         data["RestaurantTitle"] = this.restaurantTitle;
+        data["RestaurantId"] = this.restaurantId;
         data["DeliveryCost"] = this.deliveryCost;
         data["DeliveryCostPerUser"] = this.deliveryCostPerUser;
         data["TotalCost"] = this.totalCost;
@@ -1453,6 +1456,7 @@ export interface IGetOrderVm {
     ownerPhoneNumber?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
+    restaurantId?: string;
     deliveryCost?: number;
     deliveryCostPerUser?: number;
     totalCost?: number;

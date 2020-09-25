@@ -18,6 +18,7 @@ import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-re
 import { OrderComponent } from './order/order.component';
 import { AddFoodToOrderComponent } from './add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from './food/food.component';
+import { OrderPageComponent } from './order-page/order-page.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FoodComponent } from './food/food.component';
     OrderComponent,
     AddFoodToOrderComponent,
     FoodComponent,
-    routingComponents
+    routingComponents,
+    OrderPageComponent
   ],
   imports: [
     AppRoutingModule,

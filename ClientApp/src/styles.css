@@ -9,3 +9,7 @@ input.ng-touched.ng-valid{
   nav a.active {
       color: #039be5;
   }
+
+  .navbar-nav li {
+    border: 0px;
+    }

@@ -32,9 +32,6 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 			var vm = _mapper.Map<GetOrderVm>(order);
 
-			vm.OwnerName = order.Owner.Name;
-			vm.OwnerBank = order.Owner.BankName;
-			vm.OwnerPhoneNumber = order.Owner.PhoneNumber;
 			vm.DeliveryCostPerUser = (float)Math.Round(order.DeliveryCost / order.UserOrders.Count, 0);
 
 			vm.UserReceipts = new List<UserReceiptVm>();
