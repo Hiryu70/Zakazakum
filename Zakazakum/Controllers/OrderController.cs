@@ -23,9 +23,9 @@ namespace Zakazakum.API.Controllers
 		/// <returns>Список заказов</returns>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrdersListVm))]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery]GetOrdersListQuery command)
 		{
-			var vm = await Mediator.Send(new GetOrdersListQuery());
+			var vm = await Mediator.Send(command);
 
 			return Ok(vm);
 		}

@@ -1,4 +1,4 @@
-<h3>История кормежек</h3>
+<h3>Активные кормежки</h3>
 <div>
     <table class="table">
         <thead>
@@ -7,7 +7,6 @@
                 <th scope="col">Кому бабло?</th>
                 <th scope="col">Когда заказывали?</th>
                 <th scope="col">Кафеха</th>
-                <th scope="col">Статус</th>
             </tr>
         </thead>
         <tbody>
@@ -16,7 +15,6 @@
                 <td>{{order.ownerName}}</td>
                 <td title="{{order.created | date:'dd.MM.yyyy HH:mm'}}">{{order.created | date:'dd.MM.yyyy'}}</td>
                 <td>{{order.restaurantTitle}}</td>
-                <td>{{statuses[order.orderStatus]}}</td>
             </tr>
         </tbody>
     </table>

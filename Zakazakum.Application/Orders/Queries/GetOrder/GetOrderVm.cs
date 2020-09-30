@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using AutoMapper;
 using Zakazakum.Application.Common.Mapping;
 using Zakazakum.Domain.Entities;
+using Zakazakum.Domain.Enums;
 
 namespace Zakazakum.Application.Orders.Queries.GetOrder
 {
 	public class GetOrderVm : IMapFrom<Order>
 	{
 		public int Id { get; set; }
+
+		public OrderStatus OrderStatus { get; set; }
 
 		public string OwnerName { get; set; }
 

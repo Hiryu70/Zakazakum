@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 using Zakazakum.Domain.Entities;
+using Zakazakum.Domain.Enums;
 
 namespace Zakazakum.Application.Orders.Commands.CreateOrder
 {
@@ -26,6 +27,7 @@ namespace Zakazakum.Application.Orders.Commands.CreateOrder
 			{
 				Restaurant = restaurant,
 				Owner = user,
+				OrderStatus = OrderStatus.Open,
 				Created = DateTime.Now
 			};
 

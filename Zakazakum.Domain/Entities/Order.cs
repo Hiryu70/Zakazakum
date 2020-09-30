@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Zakazakum.Domain.Enums;
 
 namespace Zakazakum.Domain.Entities
 {
 	public class Order
 	{
 		public int Id { get; set; }
+
+		public OrderStatus OrderStatus { get; set; }
 
 		public User Owner { get; set; }
 

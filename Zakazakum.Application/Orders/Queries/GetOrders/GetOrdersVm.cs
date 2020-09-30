@@ -2,12 +2,15 @@
 using AutoMapper;
 using Zakazakum.Application.Common.Mapping;
 using Zakazakum.Domain.Entities;
+using Zakazakum.Domain.Enums;
 
 namespace Zakazakum.Application.Orders.Queries.GetOrders
 {
 	public class GetOrdersVm : IMapFrom<Order>
 	{
 		public int Id { get; set; }
+
+		public OrderStatus OrderStatus { get; set; }
 
 		public string OwnerName { get; set; }
 

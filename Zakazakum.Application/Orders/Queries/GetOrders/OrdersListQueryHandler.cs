@@ -28,6 +28,11 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 				.OrderBy(o => o.Created)
 				.ToListAsync(cancellationToken);
 
+			if (request.OrderStatus != null)
+			{
+				orders = orders.Where(o => o.OrderStatus == request.OrderStatus).ToList();
+			}
+
 			var ordersVm = _mapper.Map<List<GetOrdersVm>>(orders);
 
 			var vm = new OrdersListVm

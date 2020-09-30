@@ -27,10 +27,15 @@ export class Service {
 
     /**
      * Получить все заказы
+     * @param orderStatus (optional) 
      * @return Success
      */
-    order(): Observable<OrdersListVm> {
-        let url_ = this.baseUrl + "/api/order";
+    order(orderStatus: OrderStatus | undefined): Observable<OrdersListVm> {
+        let url_ = this.baseUrl + "/api/order?";
+        if (orderStatus === null)
+            throw new Error("The parameter 'orderStatus' cannot be null.");
+        else if (orderStatus !== undefined)
+            url_ += "OrderStatus=" + encodeURIComponent("" + orderStatus) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1025,8 +1030,17 @@ export class Service {
     }
 }
 
+export enum OrderStatus {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+}
+
 export class GetOrdersVm implements IGetOrdersVm {
     id?: number;
+    orderStatus?: OrderStatus;
     ownerName?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
@@ -1044,6 +1058,7 @@ export class GetOrdersVm implements IGetOrdersVm {
     init(_data?: any) {
         if (_data) {
             this.id = _data["Id"];
+            this.orderStatus = _data["OrderStatus"];
             this.ownerName = _data["OwnerName"];
             this.created = _data["Created"] ? new Date(_data["Created"].toString()) : <any>undefined;
             this.restaurantTitle = _data["RestaurantTitle"];
@@ -1061,6 +1076,7 @@ export class GetOrdersVm implements IGetOrdersVm {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["Id"] = this.id;
+        data["OrderStatus"] = this.orderStatus;
         data["OwnerName"] = this.ownerName;
         data["Created"] = this.created ? this.created.toISOString() : <any>undefined;
         data["RestaurantTitle"] = this.restaurantTitle;
@@ -1071,6 +1087,7 @@ export class GetOrdersVm implements IGetOrdersVm {
 
 export interface IGetOrdersVm {
     id?: number;
+    orderStatus?: OrderStatus;
     ownerName?: string | undefined;
     created?: Date;
     restaurantTitle?: string | undefined;
@@ -1359,6 +1376,7 @@ export interface IGetFoodOrderVm {
 
 export class GetOrderVm implements IGetOrderVm {
     id?: number;
+    orderStatus?: OrderStatus;
     ownerName?: string | undefined;
     ownerBank?: string | undefined;
     ownerPhoneNumber?: string | undefined;
@@ -1384,6 +1402,7 @@ export class GetOrderVm implements IGetOrderVm {
     init(_data?: any) {
         if (_data) {
             this.id = _data["Id"];
+            this.orderStatus = _data["OrderStatus"];
             this.ownerName = _data["OwnerName"];
             this.ownerBank = _data["OwnerBank"];
             this.ownerPhoneNumber = _data["OwnerPhoneNumber"];
@@ -1421,6 +1440,7 @@ export class GetOrderVm implements IGetOrderVm {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["Id"] = this.id;
+        data["OrderStatus"] = this.orderStatus;
         data["OwnerName"] = this.ownerName;
         data["OwnerBank"] = this.ownerBank;
         data["OwnerPhoneNumber"] = this.ownerPhoneNumber;
@@ -1451,6 +1471,7 @@ export class GetOrderVm implements IGetOrderVm {
 
 export interface IGetOrderVm {
     id?: number;
+    orderStatus?: OrderStatus;
     ownerName?: string | undefined;
     ownerBank?: string | undefined;
     ownerPhoneNumber?: string | undefined;
