@@ -1,31 +1,43 @@
-<h3>Создать кормежку</h3>
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
-    <div>
-        <label>Кому сдавать бабло</label>
-        <div >
-            <select (change)="chageOwner($event)" formControlName="ownerId" class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f.ownerId.errors }">
-                <option *ngFor="let user of users" [ngValue]="user.id">{{user.name}}</option>
-            </select>
-            <div *ngIf="submitted && f.ownerId.errors" class="invalid-feedback">
-                <div *ngIf="f.ownerId.errors.required">Выбери тело</div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <label>Кафеха</label>
+<div class="d-flex justify-content-center">
+<div class="d-flex w-50 flex-column" >
+    <div class="shadow mt-4 p-4  ">
         <div>
-            <select (change)="chageRestaurant($event)" formControlName="restaurantId" class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f.restaurantId.errors }">
-                <option *ngFor="let restaurant of restaurants" [ngValue]="restaurant.id">{{restaurant.title}}</option>
-            </select>
-            <div *ngIf="submitted && f.restaurantId.errors" class="invalid-feedback">
-                <div *ngIf="f.restaurantId.errors.required">Выбери кафеху</div>
-            </div>
+            <h3>Создать кормежку</h3>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                <div class="form-group">
+                    <label>Кому сдавать бабло</label>
+                    <div>
+                        <select class="form-control" (change)="chageOwner($event)" formControlName="ownerId"
+                            class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ownerId.errors }">
+                            <option *ngFor="let user of users" [ngValue]="user.id">{{user.name}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.ownerId.errors" class="invalid-feedback">
+                            <div *ngIf="f.ownerId.errors.required">Выбери тело</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Кафеха</label>
+                    <div>
+                        <select class="form-control" (change)="chageRestaurant($event)" formControlName="restaurantId"
+                            class="form-control" [ngClass]="{ 'is-invalid': submitted && f.restaurantId.errors }">
+                            <option *ngFor="let restaurant of restaurants" [ngValue]="restaurant.id">
+                                {{restaurant.title}}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted && f.restaurantId.errors" class="invalid-feedback">
+                            <div *ngIf="f.restaurantId.errors.required">Выбери кафеху</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary">Погнали!</button>
+                </div>
+            </form>
         </div>
     </div>
-    
-    <div>
-        <button class="btn btn-primary">Че по корму!</button>
+    <div class="mt-4 p-4 ">
+        <app-orders-list></app-orders-list>
     </div>
-</form>
+</div>
+</div>

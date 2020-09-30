@@ -6,10 +6,13 @@ input.ng-touched.ng-valid{
     background-color: #D2D2D2;
   }
 
-  nav a.active {
-      color: #039be5;
+  .navbar-nav a.active {
+      color: red;
   }
 
   .navbar-nav li {
     border: 0px;
     }
+
+.container{max-width:90%;}
+
