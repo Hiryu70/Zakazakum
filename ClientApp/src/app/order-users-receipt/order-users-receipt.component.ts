@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Service, GetOrdersVm, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm } from '../api/api.client.generated';
+import { Component, OnInit, EventEmitter, Input } from '@angular/core';
+import { Service, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm, GetOrderVm } from '../api/api.client.generated';
 
 @Component({
   selector: 'app-order-users-receipt',
@@ -7,9 +7,10 @@ import { Service, GetOrdersVm, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm }
   styleUrls: []
 })
 export class OrderUsersReceiptComponent implements OnInit {
-  public orders: GetOrdersVm[];
+  public order: GetOrderVm;
+  @Input() getOrderEvent: EventEmitter<GetOrderVm>
+
   public userReceipts: UserReceiptVm[];
-  public selectedOrder: GetOrdersVm;
   public deliveryCost: number;
   public totalCost: number;
   public ownerName: string;
@@ -18,26 +19,15 @@ export class OrderUsersReceiptComponent implements OnInit {
 
   constructor(private service: Service) { }
 
-
   ngOnInit() {
-    this.refreshOrdersList();
-  }
-
-  orderChanged(){
-    if (this.selectedOrder != undefined){
+    this.getOrderEvent.subscribe(order => {
+      this.order = order;
       this.refreshReceiptsList();
-    }
-  }
-
-  refreshOrdersList(){
-    this.service.order().subscribe(result => {
-      this.orders = result.orders;
-      this.orderChanged();
-    });
+     });
   }
 
   refreshReceiptsList(){
-    this.service.order3(this.selectedOrder.id).subscribe(result => {
+    this.service.order3(this.order.id).subscribe(result => {
       this.userReceipts = result.userReceipts;
       this.deliveryCost = result.deliveryCost;
       this.ownerName = result.ownerName;
@@ -48,19 +38,19 @@ export class OrderUsersReceiptComponent implements OnInit {
   }
 
   onOrderPaidChanged(userId:string, event: any){
-    if (this.selectedOrder != undefined){
+    if (this.order != undefined){
       let userPaidStatusVm = new UserPaidStatusVm();
       userPaidStatusVm.isPaid = event.target.checked;
       userPaidStatusVm.userId = userId;
 
-      this.service.setUserPaid(this.selectedOrder.id, userPaidStatusVm).subscribe(() => {
+      this.service.setUserPaid(this.order.id, userPaidStatusVm).subscribe(() => {
         this.refreshReceiptsList();
       });
     }
   }
 
   onDeliveryCostChanged(event: any) {
-    if (this.selectedOrder != undefined){
+    if (this.order != undefined){
       let deliveryCostVm = new DeliveryCostVm();
       if (event.target.value){
         deliveryCostVm.deliveryCost = event.target.value;
@@ -68,7 +58,7 @@ export class OrderUsersReceiptComponent implements OnInit {
         deliveryCostVm.deliveryCost = 0;
       }
 
-      this.service.updateDeliveryCost(this.selectedOrder.id, deliveryCostVm).subscribe(() => {
+      this.service.updateDeliveryCost(this.order.id, deliveryCostVm).subscribe(() => {
         this.refreshReceiptsList();
       });
     }

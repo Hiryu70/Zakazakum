@@ -1,14 +1,5 @@
 <h3>Список корма в кормежке</h3>
 <div>
-    <label>Кормежка</label>
-    <div>
-        <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
-            <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
-        </select>
-    </div>
-</div>
-
-<div>
     <table class="table">
         <thead>
             <tr>
@@ -26,7 +17,6 @@
         </tbody>
     </table>
 </div>
-
 <div>
     <table class="table">
         <thead>

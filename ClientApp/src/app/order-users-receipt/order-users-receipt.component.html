@@ -1,23 +1,13 @@
 <h3>Кто сколько должен</h3>
-<label>Кормежка</label>
-<div>
-    <select [(ngModel)]="selectedOrder" (change)="orderChanged($event)">
-        <option *ngFor="let order of orders" [ngValue]="order">{{order.id}} {{order.restaurantTitle}}</option>
-    </select>
-</div>
-
 <div>
     <label>Цена за доставку</label>
     <div>
         <input value="{{deliveryCost}}" (keyup)="onDeliveryCostChanged($event)">
     </div>
-
     <label> Кому переводить: {{ownerName}} </label><br>
     <label> Банк: {{ownerBank}} </label><br>
     <label> Номер телефона: {{ownerPhoneNumber}} </label><br>
-
 </div>
-
 <div>
     <table class="table">
         <thead>

@@ -11,28 +11,24 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
 import { UserComponent } from './user/user.component';
 
-import { OrdersListComponent } from './orders-list/orders-list.component';
 
+import { RestaurantFoodsComponent } from './restaurant-foods/restaurant-foods.component';
 import { OrderFoodsReceiptComponent } from './order-foods-receipt/order-foods-receipt.component';
 import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-receipt.component';
-import { OrderComponent } from './order/order.component';
 import { AddFoodToOrderComponent } from './add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from './food/food.component';
-import { OrderPageComponent } from './order-page/order-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RestaurantsListComponent,
     UserComponent,
-    OrdersListComponent,
     OrderFoodsReceiptComponent,
     OrderUsersReceiptComponent,
-    OrderComponent,
     AddFoodToOrderComponent,
     FoodComponent,
-    routingComponents,
-    OrderPageComponent
+    RestaurantFoodsComponent,
+    routingComponents
   ],
   imports: [
     AppRoutingModule,
@@ -44,7 +40,6 @@ import { OrderPageComponent } from './order-page/order-page.component';
   ],
   entryComponents: [ 
     UserComponent,
-    OrderComponent,
     AddFoodToOrderComponent,
     FoodComponent
   ],

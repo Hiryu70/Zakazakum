@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Service, CreateOrderCommand, UserVm, RestaurantVm } from '../api/api.client.generated';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OrdersListComponent } from '../orders-list/orders-list.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -14,14 +13,14 @@ export class OrderComponent implements OnInit {
   public restaurants: RestaurantVm[];
 
   public order: CreateOrderCommand;
-  public ordersListComponent: OrdersListComponent;
   registerForm: FormGroup;
   submitted = false;
 
-  constructor(private bsModalRef: BsModalRef, private service: Service, private formBuilder: FormBuilder) { }
+  constructor(private service: Service, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit() {
     this.refreshLists();
+    this.order = new CreateOrderCommand();
     this.registerForm = this.formBuilder.group({
       ownerId: ['', [Validators.required]],
       restaurantId: ['', [Validators.required]]
@@ -71,16 +70,11 @@ export class OrderComponent implements OnInit {
 
     this.service.order2(this.order).subscribe(
       res => {
-        this.ordersListComponent.refreshList();
-        this.bsModalRef.hide();
+        this.router.navigateByUrl('/order/' + res.orderId);
       },
       err => {
         console.log(err);
       }
     )
-  }
-
-  public closeModal() {
-    this.bsModalRef.hide();
   }
 }
