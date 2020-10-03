@@ -6,11 +6,11 @@
 </div>
 <div class="modal-body">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
-        <input type="hidden" class="Id" [value]="foodOrder.Id">
+        <input type="hidden" class="Id" [value]="foodOrder.id">
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Количество</label>
             <div class="col-sm-9">
-                <input type="text" formControlName="count" class="form-control"
+                <input type="number" formControlName="count" class="form-control"
                     [ngClass]="{ 'is-invalid': submitted && f.count.errors }">
                 <div *ngIf="submitted && f.count.errors" class="invalid-feedback">
                     <div *ngIf="f.count.errors.required">Введи количество епта</div>
