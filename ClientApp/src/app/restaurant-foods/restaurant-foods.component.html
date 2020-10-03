@@ -1,4 +1,4 @@
-<h3>Заказать корм</h3>
+<h3>{{order.restaurantTitle}}</h3>
 <div class="d-flex align-items-end flex-column">
     <div><button class="btn btn-link" (click)="onCreateFood()">Новый корм</button></div>
 </div>
@@ -11,29 +11,23 @@
     </div>
 </div>
 
-<div>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Корм</th>
-                <th scope="col">Цена</th>
-                <th scope="col">Описание</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let food of foods" (click)="onAddFoodToOrder(food)" style="cursor: pointer;">
-                <td>{{food.title}}</td>
-                <td>{{food.cost}}</td>
-                <td>{{food.description}}</td>
-                <td>
-                    <i class="fas fa-edit fa-lg" (click)="onEditFood(food);$event.stopPropagation()"></i>
-                </td>
-                <td>
-                    <i class="fas fa-trash-alt fa-lg" (click)="onDeleteFood(food);$event.stopPropagation()" style="cursor: pointer;"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div (mouseover)="toggleHover(food.id)" (mouseleave)="removeHover()" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let food of foods">
+      <mat-card appMaterialElevation (click)="onAddFoodToOrder(food)">
+        <mat-card-header>
+          <mat-card-title>{{food.title}}</mat-card-title>
+          <i class="fas fa-edit fa-lg p-1" *ngIf="hoveredElement === food.id " (click)="onEditFood(food);$event.stopPropagation()"></i>
+          <i class="fas fa-trash-alt fa-lg p-1" *ngIf="hoveredElement === food.id " (click)="onDeleteFood(food);$event.stopPropagation()"></i>
+        </mat-card-header>
+        <!-- <div class="text-center p-2">
+            <img class="mx-auto" style="width: 50%;" mat-card-image src="./../assets/images/fork.png">
+        </div> -->
+        <mat-card-content>
+          <p>
+            {{food.description}}
+          </p>
+          <b>{{food.cost}} ₽</b>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

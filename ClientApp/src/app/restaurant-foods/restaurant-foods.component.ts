@@ -7,13 +7,12 @@ import { FoodComponent } from '../food/food.component';
 @Component({
   selector: 'app-restaurant-foods',
   templateUrl: './restaurant-foods.component.html',
-  styleUrls: []
+  styleUrls: ['./restaurant-foods.component.css']
 })
 export class RestaurantFoodsComponent implements OnInit {
-
+  public hoveredElement:any;
   public order: GetOrderVm;
   @Input() getOrderEvent: EventEmitter<GetOrderVm>
-
 
   public users: UserVm[];
   public selectedUser: UserVm;
@@ -77,7 +76,6 @@ export class RestaurantFoodsComponent implements OnInit {
     }
   }
 
-
   refreshFoodsList() {
     this.service.restaurant3(this.order.restaurantId).subscribe(result => {
       this.foods = result.foods;
@@ -88,5 +86,13 @@ export class RestaurantFoodsComponent implements OnInit {
     this.service.user().subscribe(result => {
       this.users = result.users;
     });
+  }
+  
+  toggleHover(id) {
+    this.hoveredElement = id
+  }
+  
+  removeHover() {
+    this.hoveredElement = null;
   }
 }

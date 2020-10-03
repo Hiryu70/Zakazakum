@@ -8,10 +8,16 @@ import { Service, API_BASE_URL } from './api/api.client.generated';
 
 import { AppComponent } from './app.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+
+import { MatCardModule} from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { FlexLayoutModule ,LayoutGapStyleBuilder,StyleUtils,StylesheetMap,MediaMarshaller,ɵMatchMedia,
+  BreakPointRegistry,PrintHook,LayoutStyleBuilder,FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder } from '@angular/flex-layout';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
 import { UserComponent } from './user/user.component';
-
-
 import { RestaurantFoodsComponent } from './restaurant-foods/restaurant-foods.component';
 import { OrderFoodsReceiptComponent } from './order-foods-receipt/order-foods-receipt.component';
 import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-receipt.component';
@@ -38,6 +44,11 @@ import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-li
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FlexLayoutModule ,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatButtonModule,
     ModalModule.forRoot()
   ],
   entryComponents: [ 
@@ -46,6 +57,8 @@ import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-li
     FoodComponent
   ],
   providers: [
+    StyleUtils,StylesheetMap,MediaMarshaller,ɵMatchMedia,BreakPointRegistry,PrintHook,LayoutStyleBuilder,
+    FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder,LayoutGapStyleBuilder,
     { provide: API_BASE_URL, useValue: "http://localhost:5000" },
     Service],
   bootstrap: [AppComponent]
