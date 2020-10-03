@@ -7,7 +7,7 @@
 </div>
 <div class="modal-body">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
-        <input type="hidden" class="Id" [value]="user.Id">
+        <input type="hidden" class="Id" [value]="user.id">
         <div class="form-group row">
             <label class="col-sm-3 col-form-label">Имя</label>
             <div class="col-sm-9">
@@ -27,6 +27,7 @@
                     <div *ngIf="f.phoneNumber.errors.required">Введи телефон епта</div>
                     <div *ngIf="f.phoneNumber.errors.minlength">Введи больше цифр</div>
                     <div *ngIf="f.phoneNumber.errors.pattern">Нормально введи цифрами</div>
+                    <div *ngIf="f.phoneNumber.errors.phoneIsTaken">Телефон уже используется</div>
                 </div>
             </div>
         </div>
