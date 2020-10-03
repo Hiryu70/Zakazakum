@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
-import { Service, GetFoodVm, UserVm, AddFoodOrderVm, DeleteFoodVm, GetOrderVm } from '../api/api.client.generated';
+import { Service, GetFoodVm, UserVm, AddFoodOrderVm, DeleteFoodVm, GetOrderVm, OrderStatus, SetOrderStatusVm } from '../api/api.client.generated';
+import { OrderStatusConverter } from '../services/order-status-converter';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from '../food/food.component';
@@ -18,7 +19,7 @@ export class RestaurantFoodsComponent implements OnInit {
   public selectedUser: UserVm;
   public foods: GetFoodVm[];
 
-  constructor(private service: Service, private modalService: BsModalService) { }
+  constructor(private service: Service, private modalService: BsModalService, public statusConverter: OrderStatusConverter) { }
 
 
   ngOnInit() {
@@ -74,6 +75,22 @@ export class RestaurantFoodsComponent implements OnInit {
           console.log(err);
         });
     }
+  }
+
+  closeOrder(){
+    let orderStatus = new SetOrderStatusVm();
+    orderStatus.orderStatus = OrderStatus._1;
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+      this.order.orderStatus = 'Closed';
+    })
+  }
+
+  openOrder(){
+    let orderStatus = new SetOrderStatusVm();
+    orderStatus.orderStatus = OrderStatus._0;
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+      this.order.orderStatus = 'Open';
+    })
   }
 
   refreshFoodsList() {

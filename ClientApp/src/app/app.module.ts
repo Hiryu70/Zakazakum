@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
 import { Service, API_BASE_URL } from './api/api.client.generated';
+import { OrderStatusConverter } from './services/order-status-converter';
 
 import { AppComponent } from './app.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -58,7 +59,8 @@ import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-li
   ],
   providers: [
     StyleUtils,StylesheetMap,MediaMarshaller,ɵMatchMedia,BreakPointRegistry,PrintHook,LayoutStyleBuilder,
-    FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder,LayoutGapStyleBuilder,
+    FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder,LayoutGapStyleBuilder, 
+    OrderStatusConverter,
     { provide: API_BASE_URL, useValue: "http://localhost:5000" },
     Service],
   bootstrap: [AppComponent]

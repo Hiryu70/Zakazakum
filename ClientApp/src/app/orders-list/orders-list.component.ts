@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Service, GetOrdersVm } from '../api/api.client.generated';
+import { OrderStatusConverter } from '../services/order-status-converter';
+
 
 @Component({
   selector: 'app-orders-list',
@@ -7,22 +9,12 @@ import { Service, GetOrdersVm } from '../api/api.client.generated';
   styleUrls: []
 })
 export class OrdersListComponent implements OnInit {
-  public statuses: { [id: string] : string; } = {};
   public orders: GetOrdersVm[];
 
-  constructor(private service: Service) { }
+  constructor(private service: Service, public statusConverter: OrderStatusConverter) { }
 
   ngOnInit() {
-    this.fillStatuses();
     this.refreshList();
-  }
-
-  fillStatuses(){
-    this.statuses["Open"] = "Открыт";
-    this.statuses["Closed"] = "Прием закрыт";
-    this.statuses["Delivered"] = "Доставлен";
-    this.statuses["Finished"] = "Все оплатили";
-    this.statuses["Cancelled"] = "Отменен";
   }
 
   refreshList(){

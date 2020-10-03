@@ -1,6 +1,10 @@
-<div class="content">
-  <h3>{{order.restaurantTitle}}</h3>
-
+<div class="content" *ngIf="order != undefined">
+  <h3>
+    {{order.restaurantTitle}} [{{statusConverter.convert(order.orderStatus)}}]
+    <button type="button" *ngIf="order.orderStatus == 'Open'" class="btn btn-success ml-3" (click)="closeOrder()">Закрыть прием</button>
+    <button type="button" *ngIf="order.orderStatus == 'Closed'" class="btn btn-success ml-3" (click)="openOrder()">Открыть прием</button>
+  </h3>
+  
   <div>
     <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="100%">
       Кому заказываем

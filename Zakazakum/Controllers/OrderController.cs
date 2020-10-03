@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
 using Zakazakum.Application.Orders.Commands.CreateOrder;
 using Zakazakum.Application.Orders.Commands.DeleteFoodOrder;
+using Zakazakum.Application.Orders.Commands.SetOrderStatus;
 using Zakazakum.Application.Orders.Commands.SetUserPaidStatus;
 using Zakazakum.Application.Orders.Commands.UpdateDeliveryCost;
 using Zakazakum.Application.Orders.Commands.UpdateFoodOrder;
@@ -152,6 +153,27 @@ namespace Zakazakum.API.Controllers
 				UserId = userPaidStatus.UserId,
 				OrderId = orderId
 			};
+			await Mediator.Send(command);
+
+			return NoContent();
+		}
+
+		/// <summary>
+		/// Установить статус заказа
+		/// </summary>
+		/// <param name="orderStatus">Статус заказа</param>
+		/// <param name="orderId">Идентификатор заказа</param>
+		[HttpPost("{orderId}/set-order-status")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> SetOrderStatus([FromBody] SetOrderStatusVm orderStatus, [FromRoute] int orderId)
+		{
+			var command = new SetOrderStatusCommand
+			{
+				OrderStatus = orderStatus.OrderStatus,
+				OrderId = orderId
+			};
+
 			await Mediator.Send(command);
 
 			return NoContent();

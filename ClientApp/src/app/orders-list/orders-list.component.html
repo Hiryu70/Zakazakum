@@ -16,7 +16,7 @@
                 <td>{{order.ownerName}}</td>
                 <td title="{{order.created | date:'dd.MM.yyyy HH:mm'}}">{{order.created | date:'dd.MM.yyyy'}}</td>
                 <td>{{order.restaurantTitle}}</td>
-                <td>{{statuses[order.orderStatus]}}</td>
+                <td>{{statusConverter.convert(order.orderStatus)}}</td>
             </tr>
         </tbody>
     </table>
