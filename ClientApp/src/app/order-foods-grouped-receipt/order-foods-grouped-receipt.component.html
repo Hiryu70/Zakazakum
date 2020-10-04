@@ -1,0 +1,18 @@
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Корм</th>
+                <th scope="col">Комментарий</th>
+                <th scope="col">Кол-во</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let foodReceipt of foodGroupedReceipts">
+                <td>{{foodReceipt.title}}</td>
+                <td>{{foodReceipt.comment}}</td>
+                <td>{{foodReceipt.count}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

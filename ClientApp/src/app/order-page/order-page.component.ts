@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Service, GetOrderVm } from '../api/api.client.generated';
+import { Service, GetOrderVm, OrderStatus, SetOrderStatusVm } from '../api/api.client.generated';
+import { OrderStatusConverter } from '../services/order-status-converter';
 
 @Component({
   selector: 'app-order-page',
@@ -11,7 +12,7 @@ export class OrderPageComponent implements OnInit {
   public order: GetOrderVm = new GetOrderVm();
   public getOrderEvent: EventEmitter<GetOrderVm> = new EventEmitter<GetOrderVm>();
   public id : number;
-  constructor(private route: ActivatedRoute, private service: Service) { }
+  constructor(private route: ActivatedRoute, private service: Service, public statusConverter: OrderStatusConverter) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -21,4 +22,20 @@ export class OrderPageComponent implements OnInit {
     });
   }
 
+
+  closeOrder(){
+    let orderStatus = new SetOrderStatusVm();
+    orderStatus.orderStatus = OrderStatus._1;
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+      this.order.orderStatus = 'Closed';
+    })
+  }
+
+  openOrder(){
+    let orderStatus = new SetOrderStatusVm();
+    orderStatus.orderStatus = OrderStatus._0;
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+      this.order.orderStatus = 'Open';
+    })
+  }
 }

@@ -25,7 +25,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrders
 			var orders = await _context.Orders
 				.Include(o => o.Restaurant)
 				.Include(o => o.Owner)
-				.OrderBy(o => o.Created)
+				.OrderByDescending(o => o.Created)
 				.ToListAsync(cancellationToken);
 
 			if (request.OrderStatus != null)

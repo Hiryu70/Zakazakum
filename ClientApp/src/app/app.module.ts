@@ -25,6 +25,7 @@ import { OrderUsersReceiptComponent } from './order-users-receipt/order-users-re
 import { AddFoodToOrderComponent } from './add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from './food/food.component';
 import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-list.component';
+import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt/order-foods-grouped-receipt.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-li
     FoodComponent,
     RestaurantFoodsComponent,
     routingComponents,
-    OpenedOrdersListComponent
+    OpenedOrdersListComponent,
+    OrderFoodsGroupedReceiptComponent
   ],
   imports: [
     AppRoutingModule,

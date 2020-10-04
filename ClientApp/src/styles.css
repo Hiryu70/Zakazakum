@@ -1,4 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+.content {
+  padding: 16px;
+}
+
 input.ng-touched.ng-valid{
     border-color: #28a745;
 }
