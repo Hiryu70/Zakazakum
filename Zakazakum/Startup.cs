@@ -65,7 +65,6 @@ namespace Zakazakum.API
 			services.AddControllers().AddNewtonsoftJson(options =>
 			{
 				options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-				options.SerializerSettings.Converters.Add(new StringEnumConverter());
 			})
 				.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null)
 				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IZakazakumContext>());

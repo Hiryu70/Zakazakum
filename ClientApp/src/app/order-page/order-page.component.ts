@@ -36,7 +36,7 @@ export class OrderPageComponent implements OnInit {
     let orderStatus = new SetOrderStatusVm();
     orderStatus.orderStatus = OrderStatus._1;
     this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result => {
-      this.order.orderStatus = 'Closed';
+      this.order.orderStatus = 1;
     })
   }
 
@@ -44,7 +44,7 @@ export class OrderPageComponent implements OnInit {
     let orderStatus = new SetOrderStatusVm();
     orderStatus.orderStatus = OrderStatus._0;
     this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result => {
-      this.order.orderStatus = 'Open';
+      this.order.orderStatus = 0;
     })
   }
 }
