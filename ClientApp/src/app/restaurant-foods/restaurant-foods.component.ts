@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Service, GetFoodVm, UserVm, AddFoodOrderVm, DeleteFoodVm, GetOrderVm } from '../api/api.client.generated';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 import { FoodComponent } from '../food/food.component';
 
@@ -12,7 +12,8 @@ import { FoodComponent } from '../food/food.component';
 export class RestaurantFoodsComponent implements OnInit {
   public hoveredElement:any;
   public order: GetOrderVm;
-  @Input() getOrderEvent: EventEmitter<GetOrderVm>
+  @Input() orderLoadedEvent: EventEmitter<GetOrderVm>
+  @Input() orderChangedEvent: EventEmitter<void>
 
   public users: UserVm[];
   public selectedUser: UserVm;
@@ -22,7 +23,7 @@ export class RestaurantFoodsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getOrderEvent.subscribe(order => {
+    this.orderLoadedEvent.subscribe(order => {
       this.order = order;
       this.refreshFoodsList();
       this.refreshUsersList();
@@ -30,12 +31,18 @@ export class RestaurantFoodsComponent implements OnInit {
   }
 
   onCreateFood(){
-    const initialState = {
-      food: new GetFoodVm(),
-      restaurantId: this.order.restaurantId,
-      restaurantFoodsComponent: this
-    }
-    this.modalService.show(FoodComponent, { initialState });
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        food: new GetFoodVm(),
+        restaurantId: this.order.restaurantId,
+        restaurantFoodsComponent: this
+      }
+    };
+    this.modalService.show(FoodComponent, config);
   }
 
   onAddFoodToOrder(food) {
@@ -44,21 +51,34 @@ export class RestaurantFoodsComponent implements OnInit {
     foodOrder.count = 1;
     foodOrder.foodId = food.id;
 
-    const initialState = {
-      foodTitle: food.title,
-      foodOrder: foodOrder,
-      orderId: this.order.id
-    }
-    this.modalService.show(AddFoodToOrderComponent, { initialState });
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        foodTitle: food.title,
+        foodOrder: foodOrder,
+        orderId: this.order.id,
+        orderChangedEvent: this.orderChangedEvent
+      }
+    };
+    this.modalService.show(AddFoodToOrderComponent, config);
   }
 
   onEditFood(food) {
-    const initialState = {
-      food: food,
-      restaurantId: this.order.restaurantId,
-      restaurantFoodsComponent: this
-    }
-    this.modalService.show(FoodComponent, { initialState });
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        food: food,
+        restaurantId: this.order.restaurantId,
+        restaurantFoodsComponent: this
+      }
+    };
+    this.modalService.show(FoodComponent, config);
   }
 
   onDeleteFood(food: GetFoodVm){

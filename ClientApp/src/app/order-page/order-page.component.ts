@@ -9,32 +9,41 @@ import { OrderStatusConverter } from '../services/order-status-converter';
   styleUrls: []
 })
 export class OrderPageComponent implements OnInit {
+  public id: number;
   public order: GetOrderVm = new GetOrderVm();
-  public getOrderEvent: EventEmitter<GetOrderVm> = new EventEmitter<GetOrderVm>();
-  public id : number;
+  public orderLoadedEvent: EventEmitter<GetOrderVm> = new EventEmitter<GetOrderVm>();
+  public orderChangedEvent: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(private route: ActivatedRoute, private service: Service, public statusConverter: OrderStatusConverter) { }
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.service.order3(this.id).subscribe(result => {
       this.order = result;
-      this.getOrderEvent.emit(result);
+      this.orderLoadedEvent.emit(result);
+    });
+
+    this.orderChangedEvent.subscribe(() => {
+      this.service.order3(this.id).subscribe(result => {
+        this.order = result;
+        this.orderLoadedEvent.emit(result);
+      });
     });
   }
 
 
-  closeOrder(){
+  closeOrder() {
     let orderStatus = new SetOrderStatusVm();
     orderStatus.orderStatus = OrderStatus._1;
-    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result => {
       this.order.orderStatus = 'Closed';
     })
   }
 
-  openOrder(){
+  openOrder() {
     let orderStatus = new SetOrderStatusVm();
     orderStatus.orderStatus = OrderStatus._0;
-    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result =>{
+    this.service.setOrderStatus(this.order.id, orderStatus).subscribe(result => {
       this.order.orderStatus = 'Open';
     })
   }

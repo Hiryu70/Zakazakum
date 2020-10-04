@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Service, UserVm } from '../api/api.client.generated';
 import { UserComponent } from '../user/user.component';
 
@@ -18,19 +18,31 @@ export class UsersListComponent implements OnInit {
   }
 
   public editUser(user: UserVm) {
-    const initialState = {
-      user: user,
-      usersListComponent: this
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        user: user,
+        usersListComponent: this
+      }
     };
-    this.modalService.show(UserComponent, { initialState });
+    this.modalService.show(UserComponent, config);
   }
 
   newUser(){
-    const initialState = {
-      user: new UserVm(),
-      usersListComponent: this
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        user: new UserVm(),
+        usersListComponent: this
+      }
     };
-    this.modalService.show(UserComponent, { initialState });
+    this.modalService.show(UserComponent, config);
   }
 
   refreshList(){

@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Input } from '@angular/core';
-import { Service, GetOrdersVm, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm, DeleteFoodOrderVm, GetOrderVm } from '../api/api.client.generated';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { Service, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm, DeleteFoodOrderVm, GetOrderVm } from '../api/api.client.generated';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 
 @Component({
@@ -10,7 +10,8 @@ import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.
 })
 export class OrderFoodsReceiptComponent implements OnInit {
   public order: GetOrderVm;
-  @Input() getOrderEvent: EventEmitter<GetOrderVm>
+  @Input() orderLoadedEvent: EventEmitter<GetOrderVm>;
+  @Input() orderChangedEvent: EventEmitter<void>;
 
   public foodOrders: GetFoodOrderVm[];
   public foodGroupedReceipts: FoodGroupedReceiptVm[];
@@ -18,18 +19,11 @@ export class OrderFoodsReceiptComponent implements OnInit {
   constructor(private service: Service, private modalService: BsModalService) { }
 
   ngOnInit() {
-    this.getOrderEvent.subscribe(order => {
+    this.orderLoadedEvent.subscribe(order => {
       this.order = order;
-      this.refreshFoodsList();
+      this.foodOrders = order.foodReceipts;
+      this.foodGroupedReceipts = order.foodGroupedReceipts;
      });
-  }
-
-
-  public refreshFoodsList(){
-    this.service.order3(this.order.id).subscribe(result => {
-      this.foodOrders = result.foodReceipts;
-      this.foodGroupedReceipts = result.foodGroupedReceipts;
-    });
   }
 
   onEditFoodOrder(foodOrder: GetFoodOrderVm){
@@ -40,13 +34,21 @@ export class OrderFoodsReceiptComponent implements OnInit {
     foodOrderVm.comment = foodOrder.comment;
     foodOrderVm.id = foodOrder.foodOrderId;
 
-    const initialState = {
-      orderFoodsReceiptComponent: this,
-      foodTitle: foodOrder.title,
-      foodOrder: foodOrderVm,
-      orderId: this.order.id
-    }
-    this.modalService.show(AddFoodToOrderComponent, { initialState });
+    const config: ModalOptions = {
+      backdrop: 'static',
+      keyboard: false,
+      animated: true,
+      ignoreBackdropClick: true,
+      initialState: {
+        orderFoodsReceiptComponent: this,
+        foodTitle: foodOrder.title,
+        foodOrder: foodOrderVm,
+        orderId: this.order.id,
+        orderChangedEvent: this.orderChangedEvent,
+      }
+    };
+
+    this.modalService.show(AddFoodToOrderComponent, config);
   }
 
   onDeleteFoodOrder(foodOrder: GetFoodOrderVm){
@@ -57,7 +59,7 @@ export class OrderFoodsReceiptComponent implements OnInit {
   
       this.service.foodOrder3(this.order.id, deleteFoodOrderVm).subscribe(
         res => {
-          this.refreshFoodsList();
+          this.orderChangedEvent.emit();
         },
         err => {
           console.log(err);

@@ -8,7 +8,7 @@ import { Service, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm, GetOrderVm } 
 })
 export class OrderUsersReceiptComponent implements OnInit {
   public order: GetOrderVm;
-  @Input() getOrderEvent: EventEmitter<GetOrderVm>
+  @Input() orderLoadedEvent: EventEmitter<GetOrderVm>
 
   public userReceipts: UserReceiptVm[];
   public deliveryCost: number;
@@ -20,7 +20,7 @@ export class OrderUsersReceiptComponent implements OnInit {
   constructor(private service: Service) { }
 
   ngOnInit() {
-    this.getOrderEvent.subscribe(order => {
+    this.orderLoadedEvent.subscribe(order => {
       this.order = order;
       this.refreshReceiptsList();
      });

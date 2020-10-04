@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { Service, AddFoodOrderVm, UpdateFoodOrderVm } from '../api/api.client.generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -15,6 +15,8 @@ export class AddFoodToOrderComponent implements OnInit {
   public foodOrder: AddFoodOrderVm;
   public foodTitle: string;
   public orderId: number;
+  public orderChangedEvent: EventEmitter<void>;
+  
   registerForm: FormGroup;
   submitted = false;
 
@@ -42,6 +44,7 @@ export class AddFoodToOrderComponent implements OnInit {
 
       this.service.foodOrder(this.orderId, this.foodOrder).subscribe(
         res => {
+          this.orderChangedEvent.emit();
           this.bsModalRef.hide();
         },
         err => {
@@ -58,8 +61,9 @@ export class AddFoodToOrderComponent implements OnInit {
 
       this.service.foodOrder2(this.orderId, updateFoodOrder).subscribe(
         res => {
+          this.orderChangedEvent.emit();
           this.bsModalRef.hide();
-          this.orderFoodsReceiptComponent.refreshFoodsList();
+          // this.orderFoodsReceiptComponent.refreshFoodsList();
         },
         err => {
           console.log(err);

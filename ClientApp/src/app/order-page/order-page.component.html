@@ -1,17 +1,21 @@
 <div class="content" *ngIf="order != undefined">
     <h3>
-      {{order.restaurantTitle}} [{{statusConverter.convert(order.orderStatus)}}]
-      <button type="button" *ngIf="order.orderStatus == 'Open'" class="btn btn-success ml-3" (click)="closeOrder()">Закрыть прием</button>
-      <button type="button" *ngIf="order.orderStatus == 'Closed'" class="btn btn-success ml-3" (click)="openOrder()">Открыть прием</button>
+        {{order.restaurantTitle}} [{{statusConverter.convert(order.orderStatus)}}]
+        <button type="button" *ngIf="order.orderStatus == 'Open'" class="btn btn-success ml-3"
+            (click)="closeOrder()">Закрыть прием</button>
+        <button type="button" *ngIf="order.orderStatus == 'Closed'" class="btn btn-success ml-3"
+            (click)="openOrder()">Открыть прием</button>
     </h3>
-    
-<app-restaurant-foods [hidden]="order.orderStatus != 'Open'"
-    [getOrderEvent]="getOrderEvent"></app-restaurant-foods>
-<app-order-foods-receipt [hidden]="order.orderStatus != 'Open'"
-    [getOrderEvent]="getOrderEvent"></app-order-foods-receipt>
-    <app-order-foods-grouped-receipt [hidden]="order.orderStatus == 'Open'"
-    [getOrderEvent]="getOrderEvent"></app-order-foods-grouped-receipt>
-<app-order-users-receipt [hidden]="order.orderStatus == 'Open'"
-    [getOrderEvent]="getOrderEvent"></app-order-users-receipt>
 
+    <div fxLayout="row" fxLayout.xs="column">
+        <app-restaurant-foods [hidden]="order.orderStatus != 'Open'" [orderLoadedEvent]="orderLoadedEvent" [orderChangedEvent]="orderChangedEvent">
+        </app-restaurant-foods>
+        <app-order-foods-receipt [hidden]="order.orderStatus != 'Open'" [orderLoadedEvent]="orderLoadedEvent" [orderChangedEvent]="orderChangedEvent">
+        </app-order-foods-receipt>
+    </div>
+
+    <app-order-foods-grouped-receipt [hidden]="order.orderStatus == 'Open'" [orderLoadedEvent]="orderLoadedEvent">
+    </app-order-foods-grouped-receipt>
+    <app-order-users-receipt [hidden]="order.orderStatus == 'Open'" [orderLoadedEvent]="orderLoadedEvent">
+    </app-order-users-receipt>
 </div>
