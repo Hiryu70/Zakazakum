@@ -1,0 +1,23 @@
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ten {
+  width: 10%;
+}
+
+.eight {
+  width: 8%;
+}
+
+.fifteen {
+  width: 15%;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+}

@@ -1,19 +1,20 @@
 import { Component, OnInit, EventEmitter, Input } from '@angular/core';
-import { Service, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm, DeleteFoodOrderVm, GetOrderVm } from '../api/api.client.generated';
+import { Service, GetFoodOrderVm, FoodGroupedReceiptVm, AddFoodOrderVm, DeleteFoodOrderVm, GetOrderVm, UserGroupedReceiptVm } from '../api/api.client.generated';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddFoodToOrderComponent } from '../add-food-to-order/add-food-to-order.component';
 
 @Component({
   selector: 'app-order-foods-receipt',
   templateUrl: './order-foods-receipt.component.html',
-  styleUrls: []
+  styleUrls: ['./order-foods-receipt.component.css']
 })
 export class OrderFoodsReceiptComponent implements OnInit {
+  public hoveredElement:any;
   public order: GetOrderVm;
   @Input() orderLoadedEvent: EventEmitter<GetOrderVm>;
   @Input() orderChangedEvent: EventEmitter<void>;
 
-  public foodOrders: GetFoodOrderVm[];
+  public userReceipts: UserGroupedReceiptVm[];
   public foodGroupedReceipts: FoodGroupedReceiptVm[];
 
   constructor(private service: Service, private modalService: BsModalService) { }
@@ -21,8 +22,8 @@ export class OrderFoodsReceiptComponent implements OnInit {
   ngOnInit() {
     this.orderLoadedEvent.subscribe(order => {
       this.order = order;
-      this.foodOrders = order.foodReceipts;
-      this.foodGroupedReceipts = order.foodGroupedReceipts;
+      this.userReceipts = this.order.userGroupedReceipts;
+      this.foodGroupedReceipts = this.order.foodGroupedReceipts;
      });
   }
 
@@ -65,5 +66,13 @@ export class OrderFoodsReceiptComponent implements OnInit {
           console.log(err);
         });
     }
+  }
+
+  toggleHover(id) {
+    this.hoveredElement = id
+  }
+  
+  removeHover() {
+    this.hoveredElement = null;
   }
 }

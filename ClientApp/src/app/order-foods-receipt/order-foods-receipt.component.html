@@ -1,30 +1,37 @@
-<h3>Список корма в кормежке</h3>
-
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Тело</th>
-                <th scope="col">Корм</th>
-                <th scope="col">Комментарий</th>
-                <th scope="col">Количество</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let foodOrder of foodOrders">
-                <td>{{foodOrder.userName}}</td>
-                <td>{{foodOrder.title}}</td>
-                <td>{{foodOrder.comment}}</td>
-                <td>{{foodOrder.count}}</td>
-                <td>
-                    <i class="fas fa-edit fa-lg" (click)="onEditFoodOrder(foodOrder);$event.stopPropagation()" style="cursor: pointer;"></i>
-                </td>
-                <td>
-                    <i class="fas fa-trash-alt fa-lg" (click)="onDeleteFoodOrder(foodOrder);$event.stopPropagation()" style="cursor: pointer;"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <h3>Корм в кормежке</h3>
+    </div>
+
+    <div class="m-3">
+        <div *ngFor="let userReceipt of userReceipts">
+            <div class="row font-weight-bold bg-light text-dark">{{userReceipt.name}}</div>
+            <div class="row">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr (mouseover)="toggleHover(foodOrder.foodOrderId)" (mouseleave)="removeHover()"
+                            *ngFor="let foodOrder of userReceipt.foodOrders">
+                            <td>
+                                <div>{{foodOrder.title}}</div>
+                                <div class="font-weight-lighter">{{foodOrder.comment}}</div>
+                            </td>
+                            <td class="eight text-center">{{foodOrder.count}}</td>
+                            <td class="fifteen text-center">{{foodOrder.cost}}₽</td>
+                            <td class="eight text-center">
+                                <i *ngIf="hoveredElement === foodOrder.foodOrderId" class="fas fa-edit fa-lg"
+                                    (click)="onEditFoodOrder(foodOrder);$event.stopPropagation()"
+                                    style="cursor: pointer;"></i>
+                            </td>
+                            <td  class="eight text-center">
+                                <i *ngIf="hoveredElement === foodOrder.foodOrderId" class="fas fa-trash-alt fa-lg"
+                                    (click)="onDeleteFoodOrder(foodOrder);$event.stopPropagation()"
+                                    style="cursor: pointer;"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>

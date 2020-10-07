@@ -33,6 +33,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public List<UserReceiptVm> UserReceipts { get; set; }
 
+		public List<UserGroupedReceiptVm> UserGroupedReceipts { get; set; }
+
 		public List<FoodGroupedReceiptVm> FoodGroupedReceipts { get; set; }
 
 		public List<GetFoodOrderVm> FoodReceipts { get; set; }

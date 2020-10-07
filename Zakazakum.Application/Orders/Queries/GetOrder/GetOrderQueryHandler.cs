@@ -1,12 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
+using Zakazakum.Domain.Entities;
 
 namespace Zakazakum.Application.Orders.Queries.GetOrder
 {
@@ -34,32 +35,94 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 			vm.DeliveryCostPerUser = (float)Math.Round(order.DeliveryCost / order.UserOrders.Count, 0);
 
-			vm.UserReceipts = new List<UserReceiptVm>();
-			foreach (var userOrder in order.UserOrders)
-			{
-				var foodCost = userOrder.FoodOrders.Select(fo => fo.Count * fo.Food.Cost).Sum();
-				var deliveryCost = vm.DeliveryCostPerUser;
-
-				var userReceipt = new UserReceiptVm()
-				{
-					FoodCost = foodCost,
-					DeliveryCost = deliveryCost,
-					Total = foodCost + deliveryCost,
-					Name = userOrder.User.Name,
-					IsOrderPaid = userOrder.IsOrderPaid,
-					UserId = userOrder.User.Id
-				};
-
-				vm.UserReceipts.Add(userReceipt);
-			}
-
 			vm.TotalCost = order.DeliveryCost + order.UserOrders
 				.SelectMany(uo => uo.FoodOrders)
 				.Select(fo => fo.Count * fo.Food.Cost)
 				.Sum();
 
-			vm.FoodReceipts = new List<GetFoodOrderVm>();
-			foreach(var userOrder in order.UserOrders)
+			vm.UserReceipts = GetUserReceipts(order.UserOrders, vm.DeliveryCostPerUser);
+
+			vm.UserGroupedReceipts = GetUserGroupedReceipts(order.UserOrders, vm.DeliveryCostPerUser);
+
+			vm.FoodReceipts = GetFoodReceipts(order.UserOrders);
+
+			vm.FoodGroupedReceipts = GetFoodGroupedReceipts(order.UserOrders); 
+
+			return vm;
+		}
+
+		private List<UserReceiptVm> GetUserReceipts(List<UserOrder> userOrders, float deliveryCostPerUser)
+		{
+			var userReceipts = new List<UserReceiptVm>();
+
+			foreach (var userOrder in userOrders)
+			{
+				var foodCost = userOrder.FoodOrders.Select(fo => fo.Count * fo.Food.Cost).Sum();
+
+				var userReceipt = new UserReceiptVm()
+				{
+					FoodCost = foodCost,
+					DeliveryCost = deliveryCostPerUser,
+					Total = foodCost + deliveryCostPerUser,
+					Name = userOrder.User.Name,
+					IsOrderPaid = userOrder.IsOrderPaid,
+					UserId = userOrder.User.Id
+				};
+
+				userReceipts.Add(userReceipt);
+			}
+
+			return userReceipts;
+		}
+
+
+		private List<UserGroupedReceiptVm> GetUserGroupedReceipts(List<UserOrder> userOrders, float deliveryCostPerUser)
+		{
+			var userGroupedReceipts = new List<UserGroupedReceiptVm>();
+
+			foreach (var userOrder in userOrders)
+			{
+				var foodCost = userOrder.FoodOrders.Select(fo => fo.Count * fo.Food.Cost).Sum();
+
+				var userReceipt = new UserGroupedReceiptVm()
+				{
+					FoodCost = foodCost,
+					DeliveryCost = deliveryCostPerUser,
+					Total = foodCost + deliveryCostPerUser,
+					Name = userOrder.User.Name,
+					IsOrderPaid = userOrder.IsOrderPaid,
+					UserId = userOrder.User.Id
+				};
+
+				userReceipt.FoodOrders = new List<GetFoodOrderVm>();
+				foreach (var foodOrder in userOrder.FoodOrders)
+				{
+					var newFoodRecept = new GetFoodOrderVm
+					{
+						FoodOrderId = foodOrder.Id,
+						FoodId = foodOrder.Food.Id,
+						Title = foodOrder.Food.Title,
+						Cost = foodOrder.Food.Cost,
+						Comment = foodOrder.Comment,
+						Count = foodOrder.Count,
+						UserId = userOrder.User.Id,
+						UserName = userOrder.User.Name
+					};
+
+					userReceipt.FoodOrders.Add(newFoodRecept);
+				}
+
+				userGroupedReceipts.Add(userReceipt);
+			}
+
+			return userGroupedReceipts;
+		}
+
+		private List<GetFoodOrderVm> GetFoodReceipts(List<UserOrder> userOrders)
+		{
+			var foodReceipts = new List<GetFoodOrderVm>();
+
+			foreach (var userOrder in userOrders)
 			{
 				foreach (var foodOrder in userOrder.FoodOrders)
 				{
@@ -68,21 +131,28 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 						FoodOrderId = foodOrder.Id,
 						FoodId = foodOrder.Food.Id,
 						Title = foodOrder.Food.Title,
+						Cost = foodOrder.Food.Cost,
 						Comment = foodOrder.Comment,
 						Count = foodOrder.Count,
 						UserId = userOrder.User.Id,
 						UserName = userOrder.User.Name
 					};
 
-					vm.FoodReceipts.Add(newFoodRecept);
+					foodReceipts.Add(newFoodRecept);
 				}
 			}
 
-			vm.FoodGroupedReceipts = new List<FoodGroupedReceiptVm>();
-			var foodOrders = order.UserOrders.SelectMany(uo => uo.FoodOrders);
+			return foodReceipts;
+		}
+
+		private List<FoodGroupedReceiptVm> GetFoodGroupedReceipts(List<UserOrder> userOrders)
+		{
+			var foodGroupedReceipts = new List<FoodGroupedReceiptVm>();
+
+			var foodOrders = userOrders.SelectMany(uo => uo.FoodOrders);
 			foreach (var foodOrder in foodOrders)
 			{
-				var foodReceipt = vm.FoodGroupedReceipts.FirstOrDefault(fr => fr.Title == foodOrder.Food.Title && fr.Comment == foodOrder.Comment);
+				var foodReceipt = foodGroupedReceipts.FirstOrDefault(fr => fr.Title == foodOrder.Food.Title && fr.Comment == foodOrder.Comment);
 				if (foodReceipt == null)
 				{
 					var newFoodRecept = new FoodGroupedReceiptVm
@@ -91,7 +161,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 						Comment = foodOrder.Comment,
 						Count = foodOrder.Count
 					};
-					vm.FoodGroupedReceipts.Add(newFoodRecept);
+					foodGroupedReceipts.Add(newFoodRecept);
 				}
 				else
 				{
@@ -99,7 +169,7 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 				}
 			}
 
-			return vm;
+			return foodGroupedReceipts;
 		}
 	}
 }

@@ -8,6 +8,8 @@ namespace Zakazakum.Application.Orders.Queries.GetOrder
 
 		public Guid FoodId { get; set; }
 
+		public float Cost { get; set; }
+
 		public string Title { get; set; }
 
 		public string Comment { get; set; }

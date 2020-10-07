@@ -1398,6 +1398,138 @@ export interface IUserReceiptVm {
     isOrderPaid?: boolean;
 }
 
+export class GetFoodOrderVm implements IGetFoodOrderVm {
+    foodOrderId?: string;
+    foodId?: string;
+    cost?: number;
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+    userId?: string;
+    userName?: string | undefined;
+
+    constructor(data?: IGetFoodOrderVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.foodOrderId = _data["FoodOrderId"];
+            this.foodId = _data["FoodId"];
+            this.cost = _data["Cost"];
+            this.title = _data["Title"];
+            this.comment = _data["Comment"];
+            this.count = _data["Count"];
+            this.userId = _data["UserId"];
+            this.userName = _data["UserName"];
+        }
+    }
+
+    static fromJS(data: any): GetFoodOrderVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFoodOrderVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["FoodOrderId"] = this.foodOrderId;
+        data["FoodId"] = this.foodId;
+        data["Cost"] = this.cost;
+        data["Title"] = this.title;
+        data["Comment"] = this.comment;
+        data["Count"] = this.count;
+        data["UserId"] = this.userId;
+        data["UserName"] = this.userName;
+        return data; 
+    }
+}
+
+export interface IGetFoodOrderVm {
+    foodOrderId?: string;
+    foodId?: string;
+    cost?: number;
+    title?: string | undefined;
+    comment?: string | undefined;
+    count?: number;
+    userId?: string;
+    userName?: string | undefined;
+}
+
+export class UserGroupedReceiptVm implements IUserGroupedReceiptVm {
+    userId?: string;
+    name?: string | undefined;
+    total?: number;
+    foodCost?: number;
+    deliveryCost?: number;
+    isOrderPaid?: boolean;
+    foodOrders?: GetFoodOrderVm[] | undefined;
+
+    constructor(data?: IUserGroupedReceiptVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["UserId"];
+            this.name = _data["Name"];
+            this.total = _data["Total"];
+            this.foodCost = _data["FoodCost"];
+            this.deliveryCost = _data["DeliveryCost"];
+            this.isOrderPaid = _data["IsOrderPaid"];
+            if (Array.isArray(_data["FoodOrders"])) {
+                this.foodOrders = [] as any;
+                for (let item of _data["FoodOrders"])
+                    this.foodOrders!.push(GetFoodOrderVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserGroupedReceiptVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserGroupedReceiptVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["UserId"] = this.userId;
+        data["Name"] = this.name;
+        data["Total"] = this.total;
+        data["FoodCost"] = this.foodCost;
+        data["DeliveryCost"] = this.deliveryCost;
+        data["IsOrderPaid"] = this.isOrderPaid;
+        if (Array.isArray(this.foodOrders)) {
+            data["FoodOrders"] = [];
+            for (let item of this.foodOrders)
+                data["FoodOrders"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IUserGroupedReceiptVm {
+    userId?: string;
+    name?: string | undefined;
+    total?: number;
+    foodCost?: number;
+    deliveryCost?: number;
+    isOrderPaid?: boolean;
+    foodOrders?: GetFoodOrderVm[] | undefined;
+}
+
 export class FoodGroupedReceiptVm implements IFoodGroupedReceiptVm {
     title?: string | undefined;
     comment?: string | undefined;
@@ -1442,66 +1574,6 @@ export interface IFoodGroupedReceiptVm {
     count?: number;
 }
 
-export class GetFoodOrderVm implements IGetFoodOrderVm {
-    foodOrderId?: string;
-    foodId?: string;
-    title?: string | undefined;
-    comment?: string | undefined;
-    count?: number;
-    userId?: string;
-    userName?: string | undefined;
-
-    constructor(data?: IGetFoodOrderVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.foodOrderId = _data["FoodOrderId"];
-            this.foodId = _data["FoodId"];
-            this.title = _data["Title"];
-            this.comment = _data["Comment"];
-            this.count = _data["Count"];
-            this.userId = _data["UserId"];
-            this.userName = _data["UserName"];
-        }
-    }
-
-    static fromJS(data: any): GetFoodOrderVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetFoodOrderVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["FoodOrderId"] = this.foodOrderId;
-        data["FoodId"] = this.foodId;
-        data["Title"] = this.title;
-        data["Comment"] = this.comment;
-        data["Count"] = this.count;
-        data["UserId"] = this.userId;
-        data["UserName"] = this.userName;
-        return data; 
-    }
-}
-
-export interface IGetFoodOrderVm {
-    foodOrderId?: string;
-    foodId?: string;
-    title?: string | undefined;
-    comment?: string | undefined;
-    count?: number;
-    userId?: string;
-    userName?: string | undefined;
-}
-
 export class GetOrderVm implements IGetOrderVm {
     id?: number;
     orderStatus?: OrderStatus;
@@ -1515,6 +1587,7 @@ export class GetOrderVm implements IGetOrderVm {
     deliveryCostPerUser?: number;
     totalCost?: number;
     userReceipts?: UserReceiptVm[] | undefined;
+    userGroupedReceipts?: UserGroupedReceiptVm[] | undefined;
     foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
     foodReceipts?: GetFoodOrderVm[] | undefined;
 
@@ -1544,6 +1617,11 @@ export class GetOrderVm implements IGetOrderVm {
                 this.userReceipts = [] as any;
                 for (let item of _data["UserReceipts"])
                     this.userReceipts!.push(UserReceiptVm.fromJS(item));
+            }
+            if (Array.isArray(_data["UserGroupedReceipts"])) {
+                this.userGroupedReceipts = [] as any;
+                for (let item of _data["UserGroupedReceipts"])
+                    this.userGroupedReceipts!.push(UserGroupedReceiptVm.fromJS(item));
             }
             if (Array.isArray(_data["FoodGroupedReceipts"])) {
                 this.foodGroupedReceipts = [] as any;
@@ -1583,6 +1661,11 @@ export class GetOrderVm implements IGetOrderVm {
             for (let item of this.userReceipts)
                 data["UserReceipts"].push(item.toJSON());
         }
+        if (Array.isArray(this.userGroupedReceipts)) {
+            data["UserGroupedReceipts"] = [];
+            for (let item of this.userGroupedReceipts)
+                data["UserGroupedReceipts"].push(item.toJSON());
+        }
         if (Array.isArray(this.foodGroupedReceipts)) {
             data["FoodGroupedReceipts"] = [];
             for (let item of this.foodGroupedReceipts)
@@ -1610,6 +1693,7 @@ export interface IGetOrderVm {
     deliveryCostPerUser?: number;
     totalCost?: number;
     userReceipts?: UserReceiptVm[] | undefined;
+    userGroupedReceipts?: UserGroupedReceiptVm[] | undefined;
     foodGroupedReceipts?: FoodGroupedReceiptVm[] | undefined;
     foodReceipts?: GetFoodOrderVm[] | undefined;
 }

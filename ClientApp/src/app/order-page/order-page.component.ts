@@ -6,7 +6,7 @@ import { OrderStatusConverter } from '../services/order-status-converter';
 @Component({
   selector: 'app-order-page',
   templateUrl: './order-page.component.html',
-  styleUrls: []
+  styleUrls: ['./order-page.component.css']
 })
 export class OrderPageComponent implements OnInit {
   public id: number;
