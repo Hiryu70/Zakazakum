@@ -17,6 +17,6 @@
 
 ## Запуск для разработки
 * Открыть решение в Visual Studio 2017. 
-* Установить проект Zakazakum.API project в Startup Project и запустить приложение.
+* Установить проект Zakazakum.API в Startup и запустить приложение.
 * Выполнить `ng serve` для ClientApp. 
 * Перейти по адресу http://localhost:4200/.
