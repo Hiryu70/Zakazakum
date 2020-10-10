@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -13,8 +14,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { MatCardModule} from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { FlexLayoutModule ,LayoutGapStyleBuilder,StyleUtils,StylesheetMap,MediaMarshaller,ɵMatchMedia,
-  BreakPointRegistry,PrintHook,LayoutStyleBuilder,FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
@@ -47,7 +46,6 @@ import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FlexLayoutModule ,
     BrowserAnimationsModule,
     MatCardModule,
     MatToolbarModule,
@@ -60,10 +58,8 @@ import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt
     FoodComponent
   ],
   providers: [
-    StyleUtils,StylesheetMap,MediaMarshaller,ɵMatchMedia,BreakPointRegistry,PrintHook,LayoutStyleBuilder,
-    FlexStyleBuilder,ShowHideStyleBuilder,FlexOrderStyleBuilder,LayoutGapStyleBuilder, 
     OrderStatusConverter,
-    { provide: API_BASE_URL, useValue: "http://localhost:5000" },
+    { provide: API_BASE_URL, useValue: environment.apiUrl },
     Service],
   bootstrap: [AppComponent]
 })
