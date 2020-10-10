@@ -4,12 +4,10 @@ using System.Reflection;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Zakazakum.API.Common;
 using Zakazakum.Application;
@@ -91,8 +89,9 @@ namespace Zakazakum.API
 
 			app.UseCustomExceptionHandler();
 
+			var siteUrl = Configuration.GetValue<string>("SiteUrl");
 			app.UseCors(options =>
-				options.WithOrigins("http://localhost:4200")
+				options.WithOrigins(siteUrl)
 					.AllowAnyMethod()
 					.AllowAnyHeader());
 
