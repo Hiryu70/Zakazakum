@@ -3,7 +3,7 @@
         <h3>Корм в кормежке</h3>
     </div>
 
-    <div class="m-3">
+    <div [ngStyle.gt-md]="{'margin': '15px'}">
         <div *ngFor="let userReceipt of userReceipts">
             <div class="row font-weight-bold bg-light text-dark">{{userReceipt.name}}</div>
             <div class="row">

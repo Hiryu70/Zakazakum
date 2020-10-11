@@ -10,6 +10,7 @@ import { OrderStatusConverter } from './services/order-status-converter';
 
 import { AppComponent } from './app.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatCardModule} from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -41,6 +42,7 @@ import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt
     OrderFoodsGroupedReceiptComponent
   ],
   imports: [
+    FlexLayoutModule,
     AppRoutingModule,
     BrowserModule,
     FormsModule,

@@ -3,23 +3,29 @@
   padding: 16px;
 }
 
-input.ng-touched.ng-valid{
-    border-color: #28a745;
+.container{
+  padding: 0px;
 }
+
+h3 {
+  margin-left: 15px;
+}
+
+input.ng-touched.ng-valid{
+  border-color: #28a745;
+}
+
 .table-hover tbody tr:hover {
-    background-color: #D2D2D2;
-  }
+  background-color: #D2D2D2;
+}
 
-  .navbar-nav a.active {
-      color: red;
-  }
+.navbar-nav a.active {
+  color: red;
+}
 
-  .navbar-nav li {
-    border: 0px;
-    }
-
-.container{max-width:90%;}
-
+.navbar-nav li {
+  border: 0px;
+}
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
