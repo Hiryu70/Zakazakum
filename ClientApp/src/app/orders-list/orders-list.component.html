@@ -3,8 +3,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Номер</th>
-                <th scope="col">Кому бабло?</th>
+                <th fxHide.lt-sm="true" scope="col">Номер</th>
+                <th fxHide.lt-sm="true" scope="col">Кому бабло?</th>
                 <th scope="col">Когда заказывали?</th>
                 <th scope="col">Кафеха</th>
                 <th scope="col">Статус</th>
@@ -12,8 +12,8 @@
         </thead>
         <tbody>
             <tr *ngFor="let order of orders" [routerLink]="['/order', order.id]" style="cursor: pointer;">
-                <td>{{order.id}}</td>
-                <td>{{order.ownerName}}</td>
+                <td fxHide.lt-sm="true">{{order.id}}</td>
+                <td fxHide.lt-sm="true">{{order.ownerName}}</td>
                 <td title="{{order.created | date:'dd.MM.yyyy HH:mm'}}">{{order.created | date:'dd.MM.yyyy'}}</td>
                 <td>{{order.restaurantTitle}}</td>
                 <td>{{statusConverter.convert(order.orderStatus)}}</td>

@@ -1,5 +1,5 @@
 <h3>Кто сколько должен</h3>
-<div>
+<div class="m-3">
     <label>Цена за доставку</label>
     <div>
         <input type="number" value="{{deliveryCost}}" (keyup)="onDeliveryCostChanged($event)">
@@ -8,34 +8,48 @@
     <label> Банк: {{ownerBank}} </label><br>
     <label> Номер телефона: {{ownerPhoneNumber}} </label><br>
 </div>
-<div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Тело</th>
-                <th scope="col">Заказ</th>
-                <th scope="col">Доставка</th>
-                <th scope="col">Всего</th>
-                <th scope="col">Перевел</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let userReceipt of userReceipts">
-                <td>{{userReceipt.name}}</td>
-                <td>{{userReceipt.foodCost}}</td>
-                <td>{{userReceipt.deliveryCost}}</td>
-                <td>{{userReceipt.total}}</td>
-                <td>
-                    <input type="checkbox" [checked]="userReceipt.isOrderPaid" (change)="onOrderPaidChanged(userReceipt.userId,$event)" style="cursor: pointer;">
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>Всего:</td>
-                <td>{{totalCost}}</td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+
+<div *ngFor="let userReceipt of userReceipts; let i = index;">
+    <div class="row font-weight-bold bg-light text-dark align-items-center" >
+        <div class="col">
+            <a class="text-dark"  data-toggle="collapse" href="#collapseExample-{{ i }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                {{userReceipt.name}}
+            </a>
+        </div>
+        <div fxHide.lt-sm="true" class="col">
+        </div>
+        <div class="col">
+            {{userReceipt.total}}₽
+        </div>
+        <div class="col">
+            <button type="button" *ngIf="!userReceipt.isOrderPaid" class="btn btn-danger text-nowrap"
+                (click)="paidOrder(userReceipt.userId)">Не перевел</button>
+            <button type="button" *ngIf="userReceipt.isOrderPaid" class="btn btn-success"
+                (click)="unpaidOrder(userReceipt.userId)">Перевел</button>
+        </div>
+    </div>
+    <div id="collapseExample-{{ i }}" class="row collapse border-bottom align-items-center" *ngFor="let foodOrder of userReceipt.foodOrders">
+        <div class="col">
+            <div>{{foodOrder.title}}</div>
+            <div class="font-weight-lighter">{{foodOrder.comment}}</div>
+        </div>
+        <div class="col text-center ">
+            {{foodOrder.count}}
+        </div>
+        <div class="col">
+            {{foodOrder.cost}}₽
+        </div>
+        <div fxHide.lt-sm="true" class="col"></div>
+    </div>
+    <div id="collapseExample-{{ i }}" class="row collapse align-items-center" *ngIf="userReceipt.deliveryCost != 0">
+        <div class="col">
+            <div>Доставка</div>
+        </div>
+        <div class="col">
+        </div>
+        <div class="col ">
+            {{userReceipt.deliveryCost}}₽
+        </div>
+        <div fxHide.lt-sm="true" class="col"></div>
+    </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Input } from '@angular/core';
-import { Service, UserReceiptVm, DeliveryCostVm, UserPaidStatusVm, GetOrderVm } from '../api/api.client.generated';
+import { Service, UserGroupedReceiptVm, DeliveryCostVm, UserPaidStatusVm, GetOrderVm } from '../api/api.client.generated';
 
 @Component({
   selector: 'app-order-users-receipt',
@@ -10,7 +10,7 @@ export class OrderUsersReceiptComponent implements OnInit {
   public order: GetOrderVm;
   @Input() orderLoadedEvent: EventEmitter<GetOrderVm>
 
-  public userReceipts: UserReceiptVm[];
+  public userReceipts: UserGroupedReceiptVm[];
   public deliveryCost: number;
   public totalCost: number;
   public ownerName: string;
@@ -28,13 +28,33 @@ export class OrderUsersReceiptComponent implements OnInit {
 
   refreshReceiptsList(){
     this.service.order3(this.order.id).subscribe(result => {
-      this.userReceipts = result.userReceipts;
+      this.userReceipts = result.userGroupedReceipts;
       this.deliveryCost = result.deliveryCost;
       this.ownerName = result.ownerName;
       this.ownerBank = result.ownerBank;
       this.ownerPhoneNumber = result.ownerPhoneNumber;
       this.totalCost = result.totalCost;
     });
+  }
+
+  paidOrder(userId:string){
+    this.setUserPaid(userId, true);
+  }
+
+  unpaidOrder(userId:string){
+    this.setUserPaid(userId, false);
+  }
+
+  private setUserPaid(userId:string, isPaid:boolean){
+    if (this.order != undefined){
+      let userPaidStatusVm = new UserPaidStatusVm();
+      userPaidStatusVm.isPaid = isPaid;
+      userPaidStatusVm.userId = userId;
+
+      this.service.setUserPaid(this.order.id, userPaidStatusVm).subscribe(() => {
+        this.refreshReceiptsList();
+      });
+    }
   }
 
   onOrderPaidChanged(userId:string, event: any){

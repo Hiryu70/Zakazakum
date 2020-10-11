@@ -9,8 +9,8 @@
       </div>
     </div>
   </div>
-
-  <div class="m-3" fxLayout="row wrap" fxLayoutGap="16px grid">
+  <!-- <div class="m-3" fxLayout="row wrap" fxLayoutGap="16px grid"> -->
+    <div class="m-3" fxLayout="row wrap" fxLayoutGap="16px grid" >
     <div (mouseover)="toggleHover(food.id)" (mouseleave)="removeHover()" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%"
       *ngFor="let food of foods">
       <mat-card appMaterialElevation (click)="onAddFoodToOrder(food)">
@@ -32,8 +32,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div (mouseover)="toggleHover('new-food')" (mouseleave)="removeHover()" fxFlex="25%" fxFlex.xs="100%"
-      fxFlex.sm="33%">
+    <div (mouseover)="toggleHover('new-food')" (mouseleave)="removeHover()" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%">
       <mat-card appMaterialElevation (click)="onCreateFood()">
         <mat-card-header>
           <mat-card-title>Создать новый корм</mat-card-title>

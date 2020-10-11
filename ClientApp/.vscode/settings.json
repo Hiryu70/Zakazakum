@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/70b6b595-440f-48d0-8a5a-551b61f94cdf/resourceGroups/Zakazakum/providers/Microsoft.Web/sites/chepokormu",
+    "appService.deploySubpath": "dist\\AngularSPA"
+}

@@ -4,12 +4,10 @@ using System.Reflection;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Zakazakum.API.Common;
 using Zakazakum.Application;
@@ -27,9 +25,11 @@ namespace Zakazakum.API
 		/// Startup constructor
 		/// </summary>
 		/// <param name="configuration"></param>
-		public Startup(IConfiguration configuration)
+		/// <param name="environment"></param>
+		public Startup(IConfiguration configuration, IWebHostEnvironment environment)
 		{
 			Configuration = configuration;
+			WebHostEnvironment = environment;
 		}
 
 		/// <summary>
@@ -38,12 +38,25 @@ namespace Zakazakum.API
 		public IConfiguration Configuration { get; }
 
 		/// <summary>
+		/// Hosting environment
+		/// </summary>
+		private IWebHostEnvironment WebHostEnvironment { get; set; }
+
+		/// <summary>
 		/// This method gets called by the runtime. Use this method to add services to the container
 		/// </summary>
 		/// <param name="services">Collection of service descriptors</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddPostgresql(Configuration);
+			if (WebHostEnvironment.IsProduction())
+			{
+				services.AddMySqlAzure(Environment.GetEnvironmentVariable("MYSQLCONNSTR_zakazakum").ToString());
+			}
+			else
+			{
+				services.AddMySql(Configuration);
+			}
+
 			services.AddApplication();
 
 			services.AddRouting(options => options.LowercaseUrls = true);
@@ -91,8 +104,9 @@ namespace Zakazakum.API
 
 			app.UseCustomExceptionHandler();
 
+			var siteUrl = Configuration.GetValue<string>("SiteUrl");
 			app.UseCors(options =>
-				options.WithOrigins("http://localhost:4200")
+				options.WithOrigins(siteUrl)
 					.AllowAnyMethod()
 					.AllowAnyHeader());
 

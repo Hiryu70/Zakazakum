@@ -17,6 +17,14 @@ namespace Zakazakum.EntityFramework
 			return services;
 		}
 
+		public static IServiceCollection AddMySqlAzure(this IServiceCollection services, string connectionString)
+		{
+			services.AddDbContext<ZakazakumContext>(options => options.UseMySql(connectionString));
+			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
+
+			return services;
+		}
+
 		public static IServiceCollection AddPostgresql(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<ZakazakumContext>(options =>
@@ -26,7 +34,5 @@ namespace Zakazakum.EntityFramework
 
 			return services;
 		}
-
-
 	}
 }
