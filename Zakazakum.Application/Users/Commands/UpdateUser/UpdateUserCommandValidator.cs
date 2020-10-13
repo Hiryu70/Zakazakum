@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace Zakazakum.Application.Users.Commands.UpdateUser
 				.WithMessage("Номер телефона должен быть уникален.");
 			RuleFor(x => x.PhoneNumber).Length(11)
 				.When(x => !string.IsNullOrEmpty(x.PhoneNumber));
+			RuleFor(x => x.Id).MustAsync(UserExists)
+				.WithMessage("Пользователь не найден.");
 		}
 
 		private async Task<bool> UniquePhoneNumber(UpdateUserCommand command, string phoneNumber, CancellationToken cancellationToken)
@@ -31,6 +34,18 @@ namespace Zakazakum.Application.Users.Commands.UpdateUser
 			}
 
 			if (user.Id == command.Id)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private async Task<bool> UserExists(UpdateUserCommand command, Guid id, CancellationToken cancellationToken)
+		{
+			var user = await _context.Users.FirstOrDefaultAsync(r => r.Id == id);
+
+			if (user != null)
 			{
 				return true;
 			}

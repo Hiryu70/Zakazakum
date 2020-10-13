@@ -1,14 +1,21 @@
 <h3>Кафехи</h3>
+<div class="d-flex align-items-end flex-column">
+    <div><button class="btn btn-link" (click)="newRestaurant()">Добавить кафеху</button></div>
+</div>
 <div>
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">Название</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let restaurant of restaurants">
                 <td>{{restaurant.title}}</td>
+                <td>
+                    <i class="fas fa-edit fa-lg" (click)="editRestaurant(restaurant);$event.stopPropagation()" style="cursor: pointer;"></i>
+                </td>
             </tr>
         </tbody>
     </table>
