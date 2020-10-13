@@ -17,7 +17,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
 import { UserComponent } from './user/user.component';
 import { RestaurantFoodsComponent } from './restaurant-foods/restaurant-foods.component';
 import { OrderFoodsReceiptComponent } from './order-foods-receipt/order-foods-receipt.component';
@@ -26,20 +25,21 @@ import { AddFoodToOrderComponent } from './add-food-to-order/add-food-to-order.c
 import { FoodComponent } from './food/food.component';
 import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-list.component';
 import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt/order-foods-grouped-receipt.component';
+import { RestaurantComponent } from './restaurant/restaurant.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RestaurantsListComponent,
     UserComponent,
     OrderFoodsReceiptComponent,
     OrderUsersReceiptComponent,
     AddFoodToOrderComponent,
     FoodComponent,
     RestaurantFoodsComponent,
-    routingComponents,
     OpenedOrdersListComponent,
-    OrderFoodsGroupedReceiptComponent
+    OrderFoodsGroupedReceiptComponent,
+    RestaurantComponent,
+    routingComponents
   ],
   imports: [
     FlexLayoutModule,
@@ -56,6 +56,7 @@ import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt
   ],
   entryComponents: [ 
     UserComponent,
+    RestaurantComponent,
     AddFoodToOrderComponent,
     FoodComponent
   ],

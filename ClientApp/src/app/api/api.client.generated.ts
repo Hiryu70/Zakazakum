@@ -688,11 +688,71 @@ export class Service {
     }
 
     /**
+     * Редактировать ресторан
+     * @param body (optional) Новые параметры ресторана
+     * @return Success
+     */
+    restaurant3(body: UpdateRestaurantCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/restaurant";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRestaurant3(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRestaurant3(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRestaurant3(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Получить всю еду в ресторане
      * @param restaurantId Идентификатор ресторана
      * @return Success
      */
-    restaurant3(restaurantId: string): Observable<FoodsListVm> {
+    restaurant4(restaurantId: string): Observable<FoodsListVm> {
         let url_ = this.baseUrl + "/api/restaurant/{restaurantId}";
         if (restaurantId === undefined || restaurantId === null)
             throw new Error("The parameter 'restaurantId' must be defined.");
@@ -708,11 +768,11 @@ export class Service {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRestaurant3(response_);
+            return this.processRestaurant4(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRestaurant3(<any>response_);
+                    return this.processRestaurant4(<any>response_);
                 } catch (e) {
                     return <Observable<FoodsListVm>><any>_observableThrow(e);
                 }
@@ -721,7 +781,7 @@ export class Service {
         }));
     }
 
-    protected processRestaurant3(response: HttpResponseBase): Observable<FoodsListVm> {
+    protected processRestaurant4(response: HttpResponseBase): Observable<FoodsListVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2123,6 +2183,46 @@ export class CreateRestaurantCommand implements ICreateRestaurantCommand {
 }
 
 export interface ICreateRestaurantCommand {
+    title?: string | undefined;
+}
+
+export class UpdateRestaurantCommand implements IUpdateRestaurantCommand {
+    id?: string;
+    title?: string | undefined;
+
+    constructor(data?: IUpdateRestaurantCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.title = _data["Title"];
+        }
+    }
+
+    static fromJS(data: any): UpdateRestaurantCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateRestaurantCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["Title"] = this.title;
+        return data; 
+    }
+}
+
+export interface IUpdateRestaurantCommand {
+    id?: string;
     title?: string | undefined;
 }
 

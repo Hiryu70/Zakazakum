@@ -97,7 +97,7 @@ export class RestaurantFoodsComponent implements OnInit {
   }
 
   refreshFoodsList() {
-    this.service.restaurant3(this.order.restaurantId).subscribe(result => {
+    this.service.restaurant4(this.order.restaurantId).subscribe(result => {
       this.foods = result.foods;
     });
   }

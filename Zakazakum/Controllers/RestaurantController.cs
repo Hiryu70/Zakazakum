@@ -6,6 +6,7 @@ using Zakazakum.Application.Restraunts.Commands.AddFood;
 using Zakazakum.Application.Restraunts.Commands.CreateRestaurant;
 using Zakazakum.Application.Restraunts.Commands.DeleteFood;
 using Zakazakum.Application.Restraunts.Commands.EditFood;
+using Zakazakum.Application.Restraunts.Commands.UpdateRestaurant;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
 using Zakazakum.Application.Restraunts.Queries.GetRestaurants;
 
@@ -40,6 +41,20 @@ namespace Zakazakum.API.Controllers
 			var vm = await Mediator.Send(command);
 
 			return Ok(vm);
+		}
+
+		/// <summary>
+		/// Редактировать ресторан
+		/// </summary>
+		/// <param name="command">Новые параметры ресторана</param>
+		[HttpPut]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> Update([FromBody] UpdateRestaurantCommand command)
+		{
+			await Mediator.Send(command);
+
+			return NoContent();
 		}
 
 		/// <summary>
