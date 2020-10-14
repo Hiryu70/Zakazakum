@@ -104,7 +104,9 @@ export class RestaurantFoodsComponent implements OnInit {
 
   refreshUsersList() {
     this.service.user().subscribe(result => {
+      let selectedUser = this.selectedUser;
       this.users = result.users;
+      this.selectedUser = this.users.find(user  => user.id == selectedUser.id);
     });
   }
   
