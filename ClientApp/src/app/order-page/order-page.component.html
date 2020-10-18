@@ -5,12 +5,13 @@
             (click)="closeOrder()">Закрыть прием</button>
         <button type="button" *ngIf="order.orderStatus == 1" class="btn btn-success ml-3"
             (click)="openOrder()">Открыть прием</button>
+        <i class="far fa-clipboard ml-3" (click)="copyUrl()" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Скопировать ссылку"></i>
     </h3>
 
     <div fxLayout="row" fxLayout.lt-lg="column">
         <app-restaurant-foods class="back"  [hidden]="order.orderStatus != 0" [orderLoadedEvent]="orderLoadedEvent" [orderChangedEvent]="orderChangedEvent">
         </app-restaurant-foods>
-        <app-order-foods-receipt class="ml-3" fxFlex="30%" [hidden]="order.orderStatus != 0" [orderLoadedEvent]="orderLoadedEvent" [orderChangedEvent]="orderChangedEvent">
+        <app-order-foods-receipt class="m-3" fxFlex="30%" [hidden]="order.orderStatus != 0" [orderLoadedEvent]="orderLoadedEvent" [orderChangedEvent]="orderChangedEvent">
         </app-order-foods-receipt>
     </div>
 

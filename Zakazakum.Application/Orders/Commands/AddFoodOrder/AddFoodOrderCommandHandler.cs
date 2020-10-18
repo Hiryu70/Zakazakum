@@ -27,11 +27,14 @@ namespace Zakazakum.Application.Orders.Commands.AddFoodOrder
 			var user = await _context.Users.FirstAsync(u => u.Id == request.FoodOrder.UserId);
 
 			var food = order.Restaurant.Foods.First(f => f.Id == request.FoodOrder.FoodId);
+			var comment = string.IsNullOrEmpty(request.FoodOrder.Comment?.Trim()) 
+				? null 
+				: request.FoodOrder.Comment?.Trim();
 			var foodOrder = new FoodOrder
 			{
 				Food = food,
 				Count = request.FoodOrder.Count,
-				Comment = request.FoodOrder.Comment
+				Comment = comment
 			};
 
 			var userOrder = order.UserOrders?.FirstOrDefault(o => o.User == user);

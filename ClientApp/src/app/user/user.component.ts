@@ -3,7 +3,7 @@ import { Service, UserVm, CreateUserCommand, UpdateUserCommand } from '../api/ap
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersListComponent } from '../users-list/users-list.component';
-import { PhoneIsTaken } from '../validators/phone-is-not-taken.validator';
+import { IsPhoneNumberTaken } from '../validators/is-phone-number-taken.validator';
 
 @Component({
   selector: 'app-user',
@@ -24,7 +24,7 @@ export class UserComponent implements OnInit {
       phoneNumber: [this.user.phoneNumber, [Validators.required, Validators.minLength(11), Validators.pattern("^[0-9]*$")]],
       bankName: [this.user.bankName]
     },{
-      validator: PhoneIsTaken(this.service, this.user.id)
+      validator: IsPhoneNumberTaken(this.service, this.user.id)
     });
   }
 

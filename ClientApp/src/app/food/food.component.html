@@ -15,6 +15,7 @@
                     [ngClass]="{ 'is-invalid': submitted && f.title.errors }" placeholder="Корм">
                 <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
                     <div *ngIf="f.title.errors.required">Введи название корма епта</div>
+                    <div *ngIf="f.title.errors.isFoodTitleTaken">Такой корм уже существует</div>
                 </div>
             </div>
         </div>
