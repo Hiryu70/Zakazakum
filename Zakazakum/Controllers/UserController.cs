@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Users.Commands.CreateUser;
 using Zakazakum.Application.Users.Commands.UpdateUser;
 using Zakazakum.Application.Users.Queries.GetUsers;
-using Zakazakum.Application.Users.Queries.IsPhoneNumberIsTaken;
+using Zakazakum.Application.Users.Queries.IsPhoneNumberTaken;
 
 namespace Zakazakum.API.Controllers
 {
@@ -58,10 +58,10 @@ namespace Zakazakum.API.Controllers
 		/// Данный номер телефона используется
 		/// </summary>
 		/// <param name="command">Номер телефона</param>
-		[HttpPost("phone-is-taken")]
+		[HttpPost("is-phone-number-taken")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<bool>> IsPhoneNumberIsTaken([FromBody] IsPhoneNumberIsTakenQuery command)
+		public async Task<ActionResult<bool>> IsPhoneNumberIsTaken([FromBody] IsPhoneNumberTakenQuery command)
 		{
 			var vm = await Mediator.Send(command);
 

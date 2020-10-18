@@ -3,6 +3,7 @@ import { Service, GetFoodVm, AddFoodVm, EditFoodVm } from '../api/api.client.gen
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestaurantFoodsComponent } from '../restaurant-foods/restaurant-foods.component';
+import { IsFoodTitleTaken } from '../validators/is-food-title-taken.validator';
 
 @Component({
   selector: 'app-food',
@@ -23,6 +24,8 @@ export class FoodComponent implements OnInit {
       title: [this.food.title, [Validators.required]],
       description: [this.food.description],
       cost: [this.food.cost, [Validators.max(10000)]]
+    },{
+      validator: IsFoodTitleTaken(this.service, this.restaurantId, this.food.id)
     });
   }
 

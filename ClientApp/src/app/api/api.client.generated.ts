@@ -982,6 +982,70 @@ export class Service {
     }
 
     /**
+     * Блюдо с данным названием уже существует в ресторане
+     * @param body (optional) Параметры блюда
+     * @return Success
+     */
+    isFoodTitleTaken(body: IsFoodTitleTakenQuery | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/restaurant/is-food-title-taken";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processIsFoodTitleTaken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processIsFoodTitleTaken(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processIsFoodTitleTaken(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
      * Получить всех пользователей
      * @return Success
      */
@@ -1158,8 +1222,8 @@ export class Service {
      * @param body (optional) Номер телефона
      * @return Success
      */
-    phoneIsTaken(body: IsPhoneNumberIsTakenQuery | undefined): Observable<boolean> {
-        let url_ = this.baseUrl + "/api/user/phone-is-taken";
+    isPhoneNumberTaken(body: IsPhoneNumberTakenQuery | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/user/is-phone-number-taken";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -1175,11 +1239,11 @@ export class Service {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPhoneIsTaken(response_);
+            return this.processIsPhoneNumberTaken(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPhoneIsTaken(<any>response_);
+                    return this.processIsPhoneNumberTaken(<any>response_);
                 } catch (e) {
                     return <Observable<boolean>><any>_observableThrow(e);
                 }
@@ -1188,7 +1252,7 @@ export class Service {
         }));
     }
 
-    protected processPhoneIsTaken(response: HttpResponseBase): Observable<boolean> {
+    protected processIsPhoneNumberTaken(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2454,6 +2518,50 @@ export interface IDeleteFoodVm {
     id?: string;
 }
 
+export class IsFoodTitleTakenQuery implements IIsFoodTitleTakenQuery {
+    title?: string | undefined;
+    restaurantId?: string;
+    foodId?: string;
+
+    constructor(data?: IIsFoodTitleTakenQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["Title"];
+            this.restaurantId = _data["RestaurantId"];
+            this.foodId = _data["FoodId"];
+        }
+    }
+
+    static fromJS(data: any): IsFoodTitleTakenQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new IsFoodTitleTakenQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Title"] = this.title;
+        data["RestaurantId"] = this.restaurantId;
+        data["FoodId"] = this.foodId;
+        return data; 
+    }
+}
+
+export interface IIsFoodTitleTakenQuery {
+    title?: string | undefined;
+    restaurantId?: string;
+    foodId?: string;
+}
+
 export class UserVm implements IUserVm {
     id?: string;
     name?: string | undefined;
@@ -2642,11 +2750,11 @@ export interface IUpdateUserCommand {
     bankName?: string | undefined;
 }
 
-export class IsPhoneNumberIsTakenQuery implements IIsPhoneNumberIsTakenQuery {
+export class IsPhoneNumberTakenQuery implements IIsPhoneNumberTakenQuery {
     phoneNumber?: string | undefined;
     userId?: string;
 
-    constructor(data?: IIsPhoneNumberIsTakenQuery) {
+    constructor(data?: IIsPhoneNumberTakenQuery) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2662,9 +2770,9 @@ export class IsPhoneNumberIsTakenQuery implements IIsPhoneNumberIsTakenQuery {
         }
     }
 
-    static fromJS(data: any): IsPhoneNumberIsTakenQuery {
+    static fromJS(data: any): IsPhoneNumberTakenQuery {
         data = typeof data === 'object' ? data : {};
-        let result = new IsPhoneNumberIsTakenQuery();
+        let result = new IsPhoneNumberTakenQuery();
         result.init(data);
         return result;
     }
@@ -2677,7 +2785,7 @@ export class IsPhoneNumberIsTakenQuery implements IIsPhoneNumberIsTakenQuery {
     }
 }
 
-export interface IIsPhoneNumberIsTakenQuery {
+export interface IIsPhoneNumberTakenQuery {
     phoneNumber?: string | undefined;
     userId?: string;
 }

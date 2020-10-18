@@ -4,18 +4,18 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Zakazakum.Application.Common.Interfaces;
 
-namespace Zakazakum.Application.Users.Queries.IsPhoneNumberIsTaken
+namespace Zakazakum.Application.Users.Queries.IsPhoneNumberTaken
 {
-	public class IsPhoneNumberIsTakenQueryHandler : IRequestHandler<IsPhoneNumberIsTakenQuery, bool>
+	public class IsPhoneNumberTakenQueryHandler : IRequestHandler<IsPhoneNumberTakenQuery, bool>
 	{
 		private readonly IZakazakumContext _context;
 
-		public IsPhoneNumberIsTakenQueryHandler(IZakazakumContext context)
+		public IsPhoneNumberTakenQueryHandler(IZakazakumContext context)
 		{
 			_context = context;
 		}
 
-		public async Task<bool> Handle(IsPhoneNumberIsTakenQuery request, CancellationToken cancellationToken)
+		public async Task<bool> Handle(IsPhoneNumberTakenQuery request, CancellationToken cancellationToken)
 		{
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
 

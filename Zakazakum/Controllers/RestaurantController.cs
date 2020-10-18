@@ -9,6 +9,7 @@ using Zakazakum.Application.Restraunts.Commands.EditFood;
 using Zakazakum.Application.Restraunts.Commands.UpdateRestaurant;
 using Zakazakum.Application.Restraunts.Queries.GetFoods;
 using Zakazakum.Application.Restraunts.Queries.GetRestaurants;
+using Zakazakum.Application.Users.Queries.IsPhoneNumberIsTaken;
 
 namespace Zakazakum.API.Controllers
 {
@@ -112,6 +113,20 @@ namespace Zakazakum.API.Controllers
 			await Mediator.Send(new DeleteFoodCommand { Food = food, RestaurantId = restaurantId });
 
 			return NoContent();
+		}
+
+		/// <summary>
+		/// Блюдо с данным названием уже существует в ресторане
+		/// </summary>
+		/// <param name="command">Параметры блюда</param>
+		[HttpPost("is-food-title-taken")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<bool>> IsFoodTitleTaken([FromBody] IsFoodTitleTakenQuery command)
+		{
+			var vm = await Mediator.Send(command);
+
+			return Ok(vm);
 		}
 	}
 }
