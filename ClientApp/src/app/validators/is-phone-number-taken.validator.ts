@@ -5,13 +5,13 @@ export function IsPhoneNumberTaken(service: Service, userId: string) {
     return (formGroup: FormGroup) => {
         const control = formGroup.controls["phoneNumber"];
 
-        let phoneIsTaken = new IsPhoneNumberTakenQuery();
-        phoneIsTaken.phoneNumber = control.value;
-        phoneIsTaken.userId = userId;
+        let isPhoneNumberTaken = new IsPhoneNumberTakenQuery();
+        isPhoneNumberTaken.phoneNumber = control.value;
+        isPhoneNumberTaken.userId = userId;
 
-        service.isPhoneNumberTaken(phoneIsTaken).subscribe(result => {
+        service.isPhoneNumberTaken(isPhoneNumberTaken).subscribe(result => {
           if (result){
-              control.setErrors({ phoneIsTaken: true });
+              control.setErrors({ isPhoneNumberTaken: true });
           }
         });
     }

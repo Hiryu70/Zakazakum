@@ -27,7 +27,7 @@
                     <div *ngIf="f.phoneNumber.errors.required">Введи телефон епта</div>
                     <div *ngIf="f.phoneNumber.errors.minlength">Введи больше цифр</div>
                     <div *ngIf="f.phoneNumber.errors.pattern">Нормально введи цифрами</div>
-                    <div *ngIf="f.phoneNumber.errors.phoneIsTaken">Телефон уже используется</div>
+                    <div *ngIf="f.phoneNumber.errors.isPhoneNumberTaken">Телефон уже используется</div>
                 </div>
             </div>
         </div>
