@@ -16,6 +16,7 @@ export class OrderFoodsReceiptComponent implements OnInit {
 
   public userReceipts: UserGroupedReceiptVm[];
   public foodGroupedReceipts: FoodGroupedReceiptVm[];
+  public totalCost: number;
 
   constructor(private service: Service, private modalService: BsModalService) { }
 
@@ -24,6 +25,7 @@ export class OrderFoodsReceiptComponent implements OnInit {
       this.order = order;
       this.userReceipts = this.order.userGroupedReceipts;
       this.foodGroupedReceipts = this.order.foodGroupedReceipts;
+      this.totalCost = this.order.totalCost;
      });
   }
 
