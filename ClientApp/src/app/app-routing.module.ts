@@ -5,6 +5,7 @@ import { OrderComponent } from './order/order.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { OrderPageComponent } from './order-page/order-page.component';
 import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
   { path: 'orders', component: OrdersListComponent},
@@ -12,6 +13,8 @@ const routes: Routes = [
   { path: 'restaurants', component: RestaurantsListComponent},
   { path: '', component: OrderComponent},
   { path: 'order/:id', component: OrderPageComponent},
+  { path: '404', component: NotFoundComponent},
+  { path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({
@@ -19,4 +22,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
-export const routingComponents = [OrdersListComponent, UsersListComponent, OrderComponent, OrderPageComponent, RestaurantsListComponent]
+export const routingComponents = [OrdersListComponent, UsersListComponent, OrderComponent, OrderPageComponent, RestaurantsListComponent, NotFoundComponent]

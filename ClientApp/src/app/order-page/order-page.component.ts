@@ -21,7 +21,11 @@ export class OrderPageComponent implements OnInit {
     this.service.order3(this.id).subscribe(result => {
       this.order = result;
       this.orderLoadedEvent.emit(result);
-    });
+    },
+    error => {
+       console.log(error.message);
+       this.router.navigate(['/404']);
+  });
 
     this.orderChangedEvent.subscribe(() => {
       this.service.order3(this.id).subscribe(result => {
