@@ -33,6 +33,7 @@
                 [ngClass]="{ 'is-invalid': submitted && f.cost.errors }" >
                 <div *ngIf="submitted && f.cost.errors" class="invalid-feedback">
                     <div *ngIf="f.cost.errors.max">А не дохуя ли?</div>
+                    <div *ngIf="f.cost.errors.min">Самый умный?</div>
                 </div>
             </div>
         </div>

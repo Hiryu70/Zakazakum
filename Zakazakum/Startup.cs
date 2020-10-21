@@ -101,6 +101,12 @@ namespace Zakazakum.API
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			else
+			{
+				app.UseHsts();
+			}
+
+			app.UseHttpsRedirection();
 
 			app.UseCustomExceptionHandler();
 
