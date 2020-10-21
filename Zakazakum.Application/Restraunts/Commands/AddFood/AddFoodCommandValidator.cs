@@ -16,6 +16,7 @@ namespace Zakazakum.Application.Restraunts.Commands.AddFood
 			_context = context;
 			RuleFor(x => x.RestaurantId).MustAsync(RestaurantExists)
 				.WithMessage("Ресторан не найден.");
+			RuleFor(x => x.Food.Cost).GreaterThanOrEqualTo(0);
 			RuleFor(x => x.Food.Title).NotEmpty();
 		}
 

@@ -23,7 +23,7 @@ export class FoodComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       title: [this.food.title, [Validators.required]],
       description: [this.food.description],
-      cost: [this.food.cost, [Validators.max(10000)]]
+      cost: [this.food.cost, [Validators.max(10000), Validators.min(0)]]
     },{
       validator: IsFoodTitleTaken(this.service, this.restaurantId, this.food.id)
     });
