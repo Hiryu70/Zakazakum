@@ -39,7 +39,7 @@ import { RestaurantComponent } from './restaurant/restaurant.component';
     OpenedOrdersListComponent,
     OrderFoodsGroupedReceiptComponent,
     RestaurantComponent,
-    routingComponents,
+    routingComponents
   ],
   imports: [
     FlexLayoutModule,

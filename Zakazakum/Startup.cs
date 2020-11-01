@@ -75,6 +75,8 @@ namespace Zakazakum.API
 				c.IncludeXmlComments(docFilePath);
 			});
 
+			
+
 			services.AddControllers().AddNewtonsoftJson(options =>
 			{
 				options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -118,6 +120,7 @@ namespace Zakazakum.API
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

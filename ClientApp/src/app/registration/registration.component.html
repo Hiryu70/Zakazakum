@@ -1,0 +1,69 @@
+<div class="d-flex justify-content-center">
+
+<div fxLayout="column" fxFlex.lt-sm="100%" fxFlex="70%" fxFlex.gt-md="50%" >
+    
+    <div class="shadow mt-4 p-4">
+        <h3>Регистрация</h3>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Имя</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="name" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.name.touched && f.name.errors }" placeholder="Имя" maxlength="40">
+                    <div *ngIf="f.name.touched && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Введи имя епта</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Телефон</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="phoneNumber" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.phoneNumber.touched && f.phoneNumber.errors }" placeholder="79998887766" maxlength="11">
+                    <div *ngIf="f.phoneNumber.touched && f.phoneNumber.errors" class="invalid-feedback">
+                        <div *ngIf="f.phoneNumber.errors.required">Введи телефон епта</div>
+                        <div *ngIf="f.phoneNumber.errors.minlength">Введи больше цифр</div>
+                        <div *ngIf="f.phoneNumber.errors.pattern">Нормально введи цифрами</div>
+                        <div *ngIf="f.phoneNumber.errors.isPhoneNumberTaken">Телефон уже используется</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Банк</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="bankName" class="form-control" placeholder="Куда переводить" >
+                </div>
+            </div>
+            <div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Пароль</label>
+                    <div class="col-sm-9">
+                        <input type="password" formControlName="password" class="form-control"
+                        [ngClass]="{ 'is-invalid': f.password.touched && f.password.errors }" placeholder="Пароль" minlength="4">
+                        <div *ngIf="f.password.touched && f.password.errors" class="invalid-feedback">
+                            <div *ngIf="f.password.errors.required">Введи пароль епта</div>
+                            <div *ngIf="f.password.errors.minlength">Минимум 4 буквы</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Еще пароль</label>
+                    <div class="col-sm-9">
+                        <input type="password" formControlName="confirmPassword" class="form-control"
+                            [ngClass]="{ 'is-invalid': f.confirmPassword.touched && f.confirmPassword.errors }" placeholder="Еще пароль" minlength="4">
+                        <div *ngIf="f.confirmPassword.touched && f.confirmPassword.errors" class="invalid-feedback">
+                            <div *ngIf="f.confirmPassword.errors.required">Введи пароль епта</div>
+                            <div *ngIf="f.confirmPassword.errors.minlength">Минимум 4 буквы</div>
+                            <div *ngIf="f.confirmPassword.errors.isPasswordsEqual">Пароли не совпадают</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" [disabled]="!registerForm.valid">Регистрация</button>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>

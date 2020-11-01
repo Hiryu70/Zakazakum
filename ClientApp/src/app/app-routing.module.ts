@@ -6,8 +6,12 @@ import { UsersListComponent } from './users-list/users-list.component';
 import { OrderPageComponent } from './order-page/order-page.component';
 import { RestaurantsListComponent } from './restaurants-list/restaurants-list.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  { path: 'registration', component: RegistrationComponent},
+  { path: 'login', component: LoginComponent},
   { path: 'orders', component: OrdersListComponent},
   { path: 'users', component: UsersListComponent},
   { path: 'restaurants', component: RestaurantsListComponent},
@@ -22,4 +26,11 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
-export const routingComponents = [OrdersListComponent, UsersListComponent, OrderComponent, OrderPageComponent, RestaurantsListComponent, NotFoundComponent]
+export const routingComponents = [OrdersListComponent, 
+  UsersListComponent,
+   OrderComponent, 
+   OrderPageComponent, 
+   RestaurantsListComponent, 
+   NotFoundComponent, 
+   LoginComponent, 
+   RegistrationComponent]

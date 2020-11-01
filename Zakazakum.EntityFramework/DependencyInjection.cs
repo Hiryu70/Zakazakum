@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Zakazakum.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Zakazakum.EntityFramework.Identity;
 
 namespace Zakazakum.EntityFramework
 {
@@ -12,27 +14,45 @@ namespace Zakazakum.EntityFramework
 			services.AddDbContext<ZakazakumContext>(options =>
 				options.UseMySql(configuration.GetConnectionString("MySqlConnection")));
 
-			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
-
+			AddServices(services);
 			return services;
 		}
 
 		public static IServiceCollection AddMySqlAzure(this IServiceCollection services, string connectionString)
 		{
-			services.AddDbContext<ZakazakumContext>(options => options.UseMySql(connectionString));
-			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
+			services.AddDbContext<ZakazakumContext>(options => 
+				options.UseMySql(connectionString));
 
+			AddServices(services);
 			return services;
 		}
 
 		public static IServiceCollection AddPostgresql(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<ZakazakumContext>(options =>
-				options.UseNpgsql(configuration.GetConnectionString("NpgsqlConnection")));
+			services.AddDbContext<ZakazakumContext>(options => 
+			options.UseNpgsql(configuration.GetConnectionString("NpgsqlConnection")));
 
+			AddServices(services);
+			return services;
+		}
+
+		private static void AddServices(IServiceCollection services)
+		{
 			services.AddScoped<IZakazakumContext>(provider => provider.GetService<ZakazakumContext>());
 
-			return services;
+			services.AddDefaultIdentity<ApplicationUser>()
+					.AddEntityFrameworkStores<ZakazakumContext>();
+
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequiredLength = 4;
+			});
+
+			services.AddTransient<IIdentityService, IdentityService>();
 		}
 	}
 }

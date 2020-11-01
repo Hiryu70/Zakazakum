@@ -26,6 +26,58 @@ export class Service {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    register(body: ApplicationUserModel | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/auth/register";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRegister(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRegister(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRegister(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * Получить все заказы
      * @param orderStatus (optional) 
      * @return Success
@@ -1280,6 +1332,54 @@ export class Service {
         }
         return _observableOf<boolean>(<any>null);
     }
+}
+
+export class ApplicationUserModel implements IApplicationUserModel {
+    phoneNumber?: string | undefined;
+    name?: string | undefined;
+    bankName?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: IApplicationUserModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.phoneNumber = _data["PhoneNumber"];
+            this.name = _data["Name"];
+            this.bankName = _data["BankName"];
+            this.password = _data["Password"];
+        }
+    }
+
+    static fromJS(data: any): ApplicationUserModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApplicationUserModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["PhoneNumber"] = this.phoneNumber;
+        data["Name"] = this.name;
+        data["BankName"] = this.bankName;
+        data["Password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IApplicationUserModel {
+    phoneNumber?: string | undefined;
+    name?: string | undefined;
+    bankName?: string | undefined;
+    password?: string | undefined;
 }
 
 export enum OrderStatus {

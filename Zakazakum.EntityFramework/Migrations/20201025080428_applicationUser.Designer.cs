@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zakazakum.EntityFramework;
 
 namespace Zakazakum.EntityFramework.Migrations
 {
     [DbContext(typeof(ZakazakumContext))]
-    partial class ZakazakumContextModelSnapshot : ModelSnapshot
+    [Migration("20201025080428_applicationUser")]
+    partial class applicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

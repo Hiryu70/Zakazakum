@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Orders.Commands.AddFoodOrder;
@@ -13,6 +14,7 @@ using Zakazakum.Application.Orders.Queries.GetOrders;
 
 namespace Zakazakum.API.Controllers
 {
+	[Authorize]
 	/// <summary>
 	/// Orders controller
 	/// </summary>

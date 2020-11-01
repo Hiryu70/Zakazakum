@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Restraunts.Commands.AddFood;
@@ -13,6 +14,7 @@ using Zakazakum.Application.Users.Queries.IsPhoneNumberIsTaken;
 
 namespace Zakazakum.API.Controllers
 {
+	[Authorize]
 	/// <summary>
 	/// Restaurants controller
 	/// </summary>
