@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, ApplicationUserModel } from '../api/api.client.generated';
+import { Service, LoginUserQuery } from '../api/api.client.generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Router } from '@angular/router';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Component({
   selector: 'app-login',
@@ -11,9 +12,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   registerForm: FormGroup;
 
-  constructor(private service: Service, private formBuilder: FormBuilder) { }
+  constructor(private service: Service, private formBuilder: FormBuilder, private router: Router, private authGuard: AuthGuard) { }
 
   ngOnInit() {
+    if (this.authGuard.canActivate){
+      this.router.navigateByUrl('/');
+    }
+
     this.registerForm = this.formBuilder.group({
       phoneNumber: ['', [Validators.required, Validators.minLength(11), Validators.pattern("^[0-9]*$")]],
       password: ['', [Validators.required, Validators.minLength(4)]],
@@ -27,16 +32,17 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    let registerUser = new ApplicationUserModel();
+    let registerUser = new LoginUserQuery();
     registerUser.phoneNumber = this.registerForm.controls['phoneNumber'].value;
     registerUser.password = this.registerForm.controls['password'].value;
-    // this.service.register(registerUser).subscribe(
-    //   res => {
-    //       this.registerForm.reset();
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // )
+    this.service.login(registerUser).subscribe(
+      res => {
+        localStorage.setItem('token', res.token);
+        this.router.navigateByUrl('/');
+      },
+      err => {
+        console.log(err);
+      }
+    )
   }
 }

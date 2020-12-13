@@ -26,10 +26,11 @@ export class Service {
     }
 
     /**
-     * @param body (optional) 
+     * Зарегестрировать нового пользователя
+     * @param body (optional) Параметры нового пользователя
      * @return Success
      */
-    register(body: ApplicationUserModel | undefined): Observable<void> {
+    register(body: RegisterUserCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/auth/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -65,9 +66,16 @@ export class Service {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -75,6 +83,63 @@ export class Service {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * Выполнить вход пользователя
+     * @param body (optional) Параметры пользователя
+     * @return Success
+     */
+    login(body: LoginUserQuery | undefined): Observable<LoginUserVm> {
+        let url_ = this.baseUrl + "/api/auth/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(<any>response_);
+                } catch (e) {
+                    return <Observable<LoginUserVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LoginUserVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLogin(response: HttpResponseBase): Observable<LoginUserVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LoginUserVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LoginUserVm>(<any>null);
     }
 
     /**
@@ -1334,13 +1399,13 @@ export class Service {
     }
 }
 
-export class ApplicationUserModel implements IApplicationUserModel {
+export class RegisterUserCommand implements IRegisterUserCommand {
     phoneNumber?: string | undefined;
     name?: string | undefined;
     bankName?: string | undefined;
     password?: string | undefined;
 
-    constructor(data?: IApplicationUserModel) {
+    constructor(data?: IRegisterUserCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1358,9 +1423,9 @@ export class ApplicationUserModel implements IApplicationUserModel {
         }
     }
 
-    static fromJS(data: any): ApplicationUserModel {
+    static fromJS(data: any): RegisterUserCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new ApplicationUserModel();
+        let result = new RegisterUserCommand();
         result.init(data);
         return result;
     }
@@ -1375,11 +1440,139 @@ export class ApplicationUserModel implements IApplicationUserModel {
     }
 }
 
-export interface IApplicationUserModel {
+export interface IRegisterUserCommand {
     phoneNumber?: string | undefined;
     name?: string | undefined;
     bankName?: string | undefined;
     password?: string | undefined;
+}
+
+export class ProblemDetails implements IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.title = _data["title"];
+            this.status = _data["status"];
+            this.detail = _data["detail"];
+            this.instance = _data["instance"];
+        }
+    }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["title"] = this.title;
+        data["status"] = this.status;
+        data["detail"] = this.detail;
+        data["instance"] = this.instance;
+        return data; 
+    }
+}
+
+export interface IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+}
+
+export class LoginUserQuery implements ILoginUserQuery {
+    phoneNumber?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: ILoginUserQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.phoneNumber = _data["PhoneNumber"];
+            this.password = _data["Password"];
+        }
+    }
+
+    static fromJS(data: any): LoginUserQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginUserQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["PhoneNumber"] = this.phoneNumber;
+        data["Password"] = this.password;
+        return data; 
+    }
+}
+
+export interface ILoginUserQuery {
+    phoneNumber?: string | undefined;
+    password?: string | undefined;
+}
+
+export class LoginUserVm implements ILoginUserVm {
+    token?: string | undefined;
+
+    constructor(data?: ILoginUserVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.token = _data["Token"];
+        }
+    }
+
+    static fromJS(data: any): LoginUserVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginUserVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Token"] = this.token;
+        return data; 
+    }
+}
+
+export interface ILoginUserVm {
+    token?: string | undefined;
 }
 
 export enum OrderStatus {
@@ -1956,58 +2149,6 @@ export class DeliveryCostVm implements IDeliveryCostVm {
 
 export interface IDeliveryCostVm {
     deliveryCost?: number;
-}
-
-export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.type = _data["type"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.detail = _data["detail"];
-            this.instance = _data["instance"];
-        }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        return data; 
-    }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
 }
 
 export class AddFoodOrderVm implements IAddFoodOrderVm {

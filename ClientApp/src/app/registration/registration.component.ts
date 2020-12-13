@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Service, ApplicationUserModel } from '../api/api.client.generated';
+import { Service, RegisterUserCommand } from '../api/api.client.generated';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IsPhoneNumberTaken } from '../validators/is-phone-number-taken.validator';
 import { IsPasswordsEqual } from '../validators/is-passwords-equal.validator';
@@ -37,7 +37,7 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
-    let registerUser = new ApplicationUserModel();
+    let registerUser = new RegisterUserCommand();
     registerUser.name = this.registerForm.controls['name'].value;
     registerUser.phoneNumber = this.registerForm.controls['phoneNumber'].value;
     registerUser.bankName = this.registerForm.controls['bankName'].value;

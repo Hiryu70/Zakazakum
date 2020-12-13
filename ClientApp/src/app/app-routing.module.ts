@@ -8,16 +8,17 @@ import { RestaurantsListComponent } from './restaurants-list/restaurants-list.co
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: 'registration', component: RegistrationComponent},
   { path: 'login', component: LoginComponent},
-  { path: 'orders', component: OrdersListComponent},
-  { path: 'users', component: UsersListComponent},
-  { path: 'restaurants', component: RestaurantsListComponent},
-  { path: '', component: OrderComponent},
-  { path: 'order/:id', component: OrderPageComponent},
-  { path: '404', component: NotFoundComponent},
+  { path: 'orders', component: OrdersListComponent, canActivate:[AuthGuard]},
+  { path: 'users', component: UsersListComponent, canActivate:[AuthGuard]},
+  { path: 'restaurants', component: RestaurantsListComponent, canActivate:[AuthGuard]},
+  { path: '', component: OrderComponent, canActivate:[AuthGuard]},
+  { path: 'order/:id', component: OrderPageComponent, canActivate:[AuthGuard]},
+  { path: '404', component: NotFoundComponent, canActivate:[AuthGuard]},
   { path: '**', redirectTo: '/404'}
 ];
 

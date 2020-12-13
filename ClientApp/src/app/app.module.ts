@@ -2,7 +2,7 @@ import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
 import { Service, API_BASE_URL } from './api/api.client.generated';
@@ -26,6 +26,7 @@ import { FoodComponent } from './food/food.component';
 import { OpenedOrdersListComponent } from './opened-orders-list/opened-orders-list.component';
 import { OrderFoodsGroupedReceiptComponent } from './order-foods-grouped-receipt/order-foods-grouped-receipt.component';
 import { RestaurantComponent } from './restaurant/restaurant.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { RestaurantComponent } from './restaurant/restaurant.component';
   providers: [
     OrderStatusConverter,
     { provide: API_BASE_URL, useValue: environment.apiUrl },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     Service],
   bootstrap: [AppComponent]
 })

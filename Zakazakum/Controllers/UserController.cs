@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zakazakum.Application.Users.Commands.CreateUser;
@@ -18,6 +19,7 @@ namespace Zakazakum.API.Controllers
 		/// </summary>
 		/// <returns>Список пользователей</returns>
 		[HttpGet]
+		[Authorize]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<UsersListVm>> GetAll()
 		{

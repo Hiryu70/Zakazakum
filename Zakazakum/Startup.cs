@@ -1,12 +1,15 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Zakazakum.API.Common;
@@ -75,7 +78,26 @@ namespace Zakazakum.API
 				c.IncludeXmlComments(docFilePath);
 			});
 
-			
+			var key = Encoding.UTF8.GetBytes(Configuration.GetValue<string>("JWT_Secret"));
+
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(x => 
+			{
+				x.RequireHttpsMetadata = false;
+				x.SaveToken = false;
+				x.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					ClockSkew = TimeSpan.Zero
+				};
+			});
 
 			services.AddControllers().AddNewtonsoftJson(options =>
 			{
