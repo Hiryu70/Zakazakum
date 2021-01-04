@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
 
   get f() { return this.registerForm.controls; }
 
+  public registration() {
+    this.router.navigateByUrl('/registration');
+  }
+
   public onSubmit() {
     if (this.registerForm.invalid) {
       return;
